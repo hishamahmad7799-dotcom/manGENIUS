@@ -198,5 +198,170 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  console.log('ManGENIUS Staffing LLC - Shared UI Foundation Initialized.');
+  /* --------------------------------------------------------------------------
+     7. SCROLL REVEAL ANIMATIONS (IntersectionObserver)
+     -------------------------------------------------------------------------- */
+  const revealElements = document.querySelectorAll('.reveal');
+
+  if ('IntersectionObserver' in window && revealElements.length > 0) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+  } else {
+    // Fallback for older browsers
+    revealElements.forEach(el => el.classList.add('revealed'));
+  }
+
+  /* --------------------------------------------------------------------------
+     8. FUNCTIONAL TESTIMONIAL CAROUSEL
+     -------------------------------------------------------------------------- */
+  const carousel = document.querySelector('.testimonial-carousel');
+  if (carousel) {
+    const track = carousel.querySelector('.carousel-track');
+    const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
+    const dotsContainer = document.querySelector('.carousel-dots');
+
+    if (track && slides.length > 0) {
+      let currentIndex = 0;
+      let autoPlayTimer = null;
+      const totalSlides = slides.length;
+
+      // Generate indicator dots
+      if (dotsContainer) {
+        dotsContainer.innerHTML = '';
+        slides.forEach((_, idx) => {
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = `carousel-dot ${idx === 0 ? 'active' : ''}`;
+          dot.setAttribute('aria-label', `Go to testimonial slide ${idx + 1}`);
+          dot.addEventListener('click', () => {
+            goToSlide(idx);
+            resetAutoPlay();
+          });
+          dotsContainer.appendChild(dot);
+        });
+      }
+
+      const updateDots = () => {
+        if (!dotsContainer) return;
+        const dots = dotsContainer.querySelectorAll('.carousel-dot');
+        dots.forEach((dot, idx) => {
+          dot.classList.toggle('active', idx === currentIndex);
+          dot.setAttribute('aria-current', idx === currentIndex ? 'true' : 'false');
+        });
+      };
+
+      const goToSlide = (index) => {
+        if (index < 0) {
+          currentIndex = totalSlides - 1;
+        } else if (index >= totalSlides) {
+          currentIndex = 0;
+        } else {
+          currentIndex = index;
+        }
+
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+        updateDots();
+
+        slides.forEach((slide, idx) => {
+          slide.setAttribute('aria-hidden', idx !== currentIndex ? 'true' : 'false');
+        });
+      };
+
+      // Button listeners
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          goToSlide(currentIndex - 1);
+          resetAutoPlay();
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          goToSlide(currentIndex + 1);
+          resetAutoPlay();
+        });
+      }
+
+      // Keyboard navigation
+      carousel.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+          goToSlide(currentIndex - 1);
+          resetAutoPlay();
+        } else if (e.key === 'ArrowRight') {
+          goToSlide(currentIndex + 1);
+          resetAutoPlay();
+        }
+      });
+
+      // Touch swipe gestures
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      track.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      track.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+
+      const handleSwipe = () => {
+        const swipeDistance = touchStartX - touchEndX;
+        if (Math.abs(swipeDistance) > 40) {
+          if (swipeDistance > 0) {
+            goToSlide(currentIndex + 1);
+          } else {
+            goToSlide(currentIndex - 1);
+          }
+          resetAutoPlay();
+        }
+      };
+
+      // Autoplay with pause on interaction
+      const startAutoPlay = () => {
+        stopAutoPlay();
+        autoPlayTimer = setInterval(() => {
+          goToSlide(currentIndex + 1);
+        }, 6500);
+      };
+
+      const stopAutoPlay = () => {
+        if (autoPlayTimer) {
+          clearInterval(autoPlayTimer);
+          autoPlayTimer = null;
+        }
+      };
+
+      const resetAutoPlay = () => {
+        stopAutoPlay();
+        startAutoPlay();
+      };
+
+      carousel.addEventListener('mouseenter', stopAutoPlay);
+      carousel.addEventListener('mouseleave', startAutoPlay);
+      carousel.addEventListener('focusin', stopAutoPlay);
+      carousel.addEventListener('focusout', startAutoPlay);
+
+      // Initialize
+      goToSlide(0);
+      startAutoPlay();
+    }
+  }
+
+  console.log('ManGENIUS Staffing LLC - Master Scripts & Carousel Active.');
 });
