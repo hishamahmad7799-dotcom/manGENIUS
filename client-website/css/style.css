@@ -120,8 +120,9 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  scroll-padding-top: var(--header-height);
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
 }
 
@@ -133,7 +134,7 @@ body {
   background-color: var(--color-white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
   position: relative;
   display: flex;
@@ -578,19 +579,21 @@ p:last-child {
    7. MAIN HEADER & NAVIGATION
    -------------------------------------------------------------------------- */
 .site-header {
+  position: -webkit-sticky;
   position: sticky;
   top: 0;
+  width: 100%;
   z-index: var(--z-header);
   background-color: var(--color-dark-grey);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all var(--transition-base);
+  transition: background-color var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
 }
 
 .site-header.scrolled {
-  background-color: rgba(18, 18, 18, 0.96);
+  background-color: rgba(25, 25, 25, 0.96);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: var(--shadow-header);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
@@ -2015,15 +2018,186 @@ p:last-child {
     padding: var(--space-6);
   }
 
+  /* Mobile Footer Layout - Centered, Balanced & Symmetrical (<= 768px) */
+  .footer-top {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-10);
+  }
+
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: clamp(2rem, 5vw, 2.75rem);
+    text-align: center;
+    justify-items: center;
   }
-  
+
+  .footer-grid > div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-brand {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .footer-logo {
+    display: inline-block;
+    margin: 0 auto var(--space-5);
+    text-align: center;
+  }
+
+  .footer-logo img {
+    margin: 0 auto;
+  }
+
+  .footer-about {
+    margin: 0 auto var(--space-6);
+    text-align: center;
+    max-width: 460px;
+    line-height: var(--lh-relaxed);
+  }
+
+  .footer-contact-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    margin: 0 auto var(--space-6);
+    width: 100%;
+  }
+
+  .footer-contact-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-2);
+    max-width: 100%;
+    flex-wrap: wrap;
+    word-break: break-word;
+  }
+
+  .footer-contact-item svg {
+    flex-shrink: 0;
+  }
+
+  .footer-socials {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-3);
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .social-icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .footer-col-title {
+    text-align: center;
+    margin: 0 auto var(--space-5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .footer-col-title::after {
+    margin: 8px auto 0 auto;
+    width: 28px;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: 0;
+    margin: 0 auto;
+  }
+
+  .footer-links li {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  .footer-links a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: var(--space-1) var(--space-2);
+  }
+
+  .footer-links a:hover {
+    transform: translateY(-2px);
+  }
+
+  .footer-cta-card {
+    text-align: center;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    padding: var(--space-6);
+  }
+
+  .footer-cta-card h5 {
+    text-align: center;
+  }
+
+  .footer-cta-card p {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 360px;
+  }
+
+  .footer-cta-card .btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .footer-bottom {
+    padding: var(--space-6) 0;
+    text-align: center;
+  }
+
   .footer-bottom-content {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     gap: var(--space-4);
+  }
+
+  .footer-bottom-content > div:first-child {
+    text-align: center;
+    line-height: var(--lh-relaxed);
+  }
+
+  .footer-legal-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
   }
   
   .mobile-drawer {

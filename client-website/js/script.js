@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Header elevation & blur effect
     if (header) {
-      if (scrollY > 20) {
+      if (scrollY > 15) {
         header.classList.add('scrolled');
       } else {
         header.classList.remove('scrolled');
