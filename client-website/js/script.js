@@ -363,5 +363,230 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  console.log('ManGENIUS Staffing LLC - Master Scripts & Carousel Active.');
+  /* --------------------------------------------------------------------------
+     9. FUNCTIONAL INDUSTRY HORIZONTAL CAROUSEL
+     -------------------------------------------------------------------------- */
+  const industryCarousel = document.querySelector('.industry-carousel');
+  if (industryCarousel) {
+    const track = industryCarousel.querySelector('.industry-track');
+    const slides = Array.from(industryCarousel.querySelectorAll('.industry-slide'));
+    const prevBtn = document.querySelector('.industry-prev');
+    const nextBtn = document.querySelector('.industry-next');
+    const dotsContainer = document.querySelector('.industry-dots');
+
+    if (track && slides.length > 0) {
+      let currentIndex = 0;
+      let isDragging = false;
+
+      const getVisibleCount = () => {
+        if (window.innerWidth <= 640) return 1;
+        if (window.innerWidth <= 1024) return 2;
+        return 3;
+      };
+
+      const getMaxIndex = () => {
+        return Math.max(0, slides.length - getVisibleCount());
+      };
+
+      const renderDots = () => {
+        if (!dotsContainer) return;
+        const maxIdx = getMaxIndex();
+        dotsContainer.innerHTML = '';
+        if (maxIdx === 0) {
+          dotsContainer.style.display = 'none';
+          return;
+        }
+        dotsContainer.style.display = 'flex';
+        for (let i = 0; i <= maxIdx; i++) {
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = `carousel-dot ${i === currentIndex ? 'active' : ''}`;
+          dot.setAttribute('aria-label', `Go to industry slide position ${i + 1}`);
+          dot.addEventListener('click', () => {
+            goToSlide(i);
+          });
+          dotsContainer.appendChild(dot);
+        }
+      };
+
+      const updateControls = () => {
+        const maxIdx = getMaxIndex();
+        if (prevBtn) {
+          if (maxIdx === 0) {
+            prevBtn.disabled = true;
+            prevBtn.style.opacity = '0.35';
+            prevBtn.style.cursor = 'default';
+          } else {
+            prevBtn.disabled = false;
+            prevBtn.style.opacity = '1';
+            prevBtn.style.cursor = 'pointer';
+          }
+        }
+        if (nextBtn) {
+          if (maxIdx === 0) {
+            nextBtn.disabled = true;
+            nextBtn.style.opacity = '0.35';
+            nextBtn.style.cursor = 'default';
+          } else {
+            nextBtn.disabled = false;
+            nextBtn.style.opacity = '1';
+            nextBtn.style.cursor = 'pointer';
+          }
+        }
+
+        if (dotsContainer) {
+          const dots = dotsContainer.querySelectorAll('.carousel-dot');
+          dots.forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === currentIndex);
+            dot.setAttribute('aria-current', idx === currentIndex ? 'true' : 'false');
+          });
+        }
+      };
+
+      const goToSlide = (index) => {
+        const maxIdx = getMaxIndex();
+        if (index > maxIdx) {
+          currentIndex = 0;
+        } else if (index < 0) {
+          currentIndex = maxIdx;
+        } else {
+          currentIndex = index;
+        }
+
+        if (maxIdx === 0) {
+          track.style.transform = 'translateX(0px)';
+        } else {
+          const slideWidth = slides[0].getBoundingClientRect().width;
+          const gap = parseFloat(window.getComputedStyle(track).gap) || 24;
+          const offset = currentIndex * (slideWidth + gap);
+          track.style.transform = `translateX(-${offset}px)`;
+        }
+
+        updateControls();
+      };
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          goToSlide(currentIndex - 1);
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          goToSlide(currentIndex + 1);
+        });
+      }
+
+      // Touch swipe gestures
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      track.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      track.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const swipeDistance = touchStartX - touchEndX;
+        if (Math.abs(swipeDistance) > 40) {
+          if (swipeDistance > 0) {
+            goToSlide(currentIndex + 1);
+          } else {
+            goToSlide(currentIndex - 1);
+          }
+        }
+      }, { passive: true });
+
+      // Mouse drag gestures (Desktop & Laptop touchpads / mice)
+      let mouseStartX = 0;
+      industryCarousel.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        mouseStartX = e.pageX;
+        industryCarousel.classList.add('is-dragging');
+      });
+
+      window.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        industryCarousel.classList.remove('is-dragging');
+        const diffX = mouseStartX - e.pageX;
+        if (Math.abs(diffX) > 45) {
+          if (diffX > 0) {
+            goToSlide(currentIndex + 1);
+          } else {
+            goToSlide(currentIndex - 1);
+          }
+        }
+      });
+
+      // Handle window resizing with debounce
+      let resizeDebounce;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeDebounce);
+        resizeDebounce = setTimeout(() => {
+          renderDots();
+          goToSlide(currentIndex);
+        }, 150);
+      });
+
+      // Initial render
+      renderDots();
+      goToSlide(0);
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     10. LIVE COUNTING ANIMATION FOR HERO STATS
+     -------------------------------------------------------------------------- */
+  const counterElements = document.querySelectorAll('.trust-item-stat .counter');
+  if (counterElements.length > 0) {
+    const animateCounter = (counter) => {
+      const target = parseFloat(counter.getAttribute('data-target'));
+      const decimals = parseInt(counter.getAttribute('data-decimals') || '0', 10);
+      const duration = 1800; // 1.8s smooth duration
+      const startTime = performance.now();
+
+      // Respect accessibility preferences
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        counter.textContent = target.toFixed(decimals);
+        return;
+      }
+
+      const updateCount = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Cubic ease-out deceleration curve
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentVal = progress === 1 ? target : (target * easeOut);
+
+        counter.textContent = currentVal.toFixed(decimals);
+
+        if (progress < 1) {
+          requestAnimationFrame(updateCount);
+        } else {
+          counter.textContent = target.toFixed(decimals);
+        }
+      };
+
+      requestAnimationFrame(updateCount);
+    };
+
+    if ('IntersectionObserver' in window) {
+      const counterObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      counterElements.forEach(counter => counterObserver.observe(counter));
+    } else {
+      counterElements.forEach(counter => animateCounter(counter));
+    }
+  }
+
+  console.log('ManGENIUS Staffing LLC - Master Scripts, Carousels & Live Counters Active.');
 });
