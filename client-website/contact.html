@@ -5,21 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Contact Us | ManGENIUS Staffing LLC</title>
-  <meta name="description" content="Contact ManGENIUS Staffing LLC. Submit a staffing talent request, connect with our 24/7 staffing coordinators, or locate regional corporate offices.">
+  <meta name="description" content="Connect with ManGENIUS Staffing LLC for Information Technology Staffing, Special Education Staffing, Healthcare Staffing, or career opportunity enquiries.">
   
+  <!-- Preconnect to Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- Master Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Favicon / Touch Icon -->
   <link rel="icon" type="image/png" href="images/logo.png">
 </head>
 <body>
 
   <!-- =========================================================================
-       1. TOP UTILITY BAR
+       1. TOP UTILITY BAR (Editable Contact & Social Placeholders)
        ========================================================================= -->
-  <aside class="topbar" aria-label="Quick contact and portal links">
+  <aside class="topbar" aria-label="Quick contact and social links">
     <div class="container topbar-content">
       <div class="topbar-left">
         <span class="topbar-item">
@@ -72,27 +76,27 @@
             </a>
             <div class="dropdown-menu" role="menu">
               <div class="dropdown-item">
-                <a href="services.html" class="dropdown-link" role="menuitem">
+                <a href="services.html#it-staffing" class="dropdown-link" role="menuitem">
                   <span class="dropdown-title">IT Staffing</span>
-                  <span class="dropdown-desc">Software engineers, cloud architects, and tech specialists.</span>
+                  <span class="dropdown-desc">Technology professionals supporting digital operations and IT goals.</span>
                 </a>
               </div>
               <div class="dropdown-item">
-                <a href="services.html" class="dropdown-link" role="menuitem">
+                <a href="services.html#special-education-staffing" class="dropdown-link" role="menuitem">
                   <span class="dropdown-title">Special Education Staffing</span>
-                  <span class="dropdown-desc">Special educators, school nurses, and certified therapists.</span>
+                  <span class="dropdown-desc">Dedicated professionals supporting inclusive learning environments.</span>
                 </a>
               </div>
               <div class="dropdown-item">
-                <a href="services.html" class="dropdown-link" role="menuitem">
+                <a href="services.html#healthcare-staffing" class="dropdown-link" role="menuitem">
                   <span class="dropdown-title">Healthcare Staffing</span>
-                  <span class="dropdown-desc">Travel RNs, allied clinicians, and acute care professionals.</span>
+                  <span class="dropdown-desc">Qualified professionals supporting dependable healthcare services.</span>
                 </a>
               </div>
               <div class="dropdown-item">
-                <a href="services.html" class="dropdown-link" role="menuitem">
-                  <span class="dropdown-title">Workforce Solutions</span>
-                  <span class="dropdown-desc">Temporary coverage, direct hire, and managed staffing programs.</span>
+                <a href="services.html#staffing-approach" class="dropdown-link" role="menuitem">
+                  <span class="dropdown-title">Our Staffing Approach</span>
+                  <span class="dropdown-desc">Relationship-driven recruitment tailored to organizational needs.</span>
                 </a>
               </div>
             </div>
@@ -108,7 +112,7 @@
 
       <div class="header-actions">
         <a href="careers.html" class="btn btn-outline-white btn-sm">Find Jobs</a>
-        <a href="contact.html" class="btn btn-orange btn-sm">
+        <a href="#contact-form-section" class="btn btn-orange btn-sm">
           <span>Request Staffing</span>
           <svg class="icon icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
         </a>
@@ -147,10 +151,10 @@
           </button>
         </div>
         <div class="mobile-submenu">
-          <a href="services.html">IT Staffing</a>
-          <a href="services.html">Special Education Staffing</a>
-          <a href="services.html">Healthcare Staffing</a>
-          <a href="services.html">Workforce Solutions</a>
+          <a href="services.html#it-staffing">IT Staffing</a>
+          <a href="services.html#special-education-staffing">Special Education Staffing</a>
+          <a href="services.html#healthcare-staffing">Healthcare Staffing</a>
+          <a href="services.html#staffing-approach">Our Staffing Approach</a>
         </div>
       </li>
       <li class="mobile-nav-item"><a href="careers.html" class="mobile-nav-link">Careers</a></li>
@@ -158,8 +162,8 @@
     </ul>
 
     <div class="mobile-drawer-actions">
-      <a href="contact.html" class="btn btn-orange">Request Staffing</a>
-      <a href="careers.html" class="btn btn-outline-white">Search Open Jobs</a>
+      <a href="#contact-form-section" class="btn btn-orange">Send an Enquiry</a>
+      <a href="careers.html" class="btn btn-outline-white">Explore Careers</a>
     </div>
 
     <div class="mobile-drawer-contact">
@@ -169,100 +173,348 @@
   </aside>
 
   <!-- =========================================================================
-       4. PAGE HERO & SKELETON
+       4. MAIN CONTENT AREA — CONTACT US PAGE
        ========================================================================= -->
   <main id="mainContent">
-    <section class="page-hero">
-      <div class="container">
-        <div class="hero-breadcrumbs">
-          <a href="index.html">Home</a>
-          <span class="separator">/</span>
-          <span class="current">Contact Us</span>
+
+    <!-- CONTACT HERO -->
+    <section class="page-hero subpage-hero" id="contact-hero">
+      <div class="hero-bg-media" aria-hidden="true">
+        <img src="images/services/hero-banner.jpg" alt="" class="hero-bg-img" width="1920" height="820" fetchpriority="high">
+        <div class="hero-bg-overlay"></div>
+        <div class="hero-bg-glow"></div>
+      </div>
+
+      <div class="container hero-container">
+        <div class="reveal">
+          <nav class="hero-breadcrumbs" aria-label="Breadcrumb">
+            <a href="index.html">Home</a>
+            <span class="separator" aria-hidden="true">/</span>
+            <span class="current" aria-current="page">Contact Us</span>
+          </nav>
+
+          <h1 class="hero-title">Let's Connect.</h1>
+          <p class="hero-subtitle">
+            Whether your organization is looking for staffing solutions or you're exploring career opportunities, ManGENIUS Staffing LLC is ready to hear from you.
+          </p>
+
+          <div class="hero-cta-group" style="margin-bottom: 0;">
+            <a href="#contact-form-section" class="btn btn-orange btn-lg">
+              <span>Send an Enquiry</span>
+              <svg class="icon icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+            <a href="#contact-info" class="btn btn-outline-white btn-lg">Contact Details</a>
+          </div>
         </div>
-        <h1 class="hero-title">Connect with ManGENIUS Staffing LLC</h1>
-        <p class="hero-subtitle">
-          Whether you need immediate healthcare shift coverage, long-term workforce planning, or have inquiries regarding open positions, our directors are available 24/7.
-        </p>
       </div>
     </section>
 
-    <!-- Contact Information Architecture -->
-    <section class="section bg-white">
+    <!-- SECTION 1: CONTACT INTRODUCTION -->
+    <section class="section bg-white" id="contact-intro">
       <div class="container">
-        <div class="grid grid-2">
-          
-          <!-- Contact Detail Cards -->
-          <div>
-            <span class="eyebrow">Direct Inquiries</span>
-            <h2>We Are Ready to Assist You</h2>
-            <p class="text-lead" style="margin-bottom: var(--space-8);">
-              All details below are kept editable and configurable to match official corporate registration.
+        <div class="reveal" style="max-width: 760px; margin-bottom: clamp(1.75rem, 3vw, 2.5rem);">
+          <span class="eyebrow">Start a Conversation</span>
+          <h2>How Can We Help?</h2>
+          <p class="text-lead">
+            Every enquiry begins with understanding your goals. ManGENIUS Staffing LLC welcomes conversations with organizations and professionals across our specialized staffing areas.
+          </p>
+        </div>
+
+        <div class="grid grid-4">
+          <div class="card card-service reveal">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            </div>
+            <h3 class="card-title" style="font-size: var(--fs-lg);">Businesses</h3>
+            <p class="card-text" style="margin-bottom: 0;">
+              Businesses looking for staffing solutions to strengthen their Information Technology teams and support organizational objectives.
+            </p>
+          </div>
+
+          <div class="card card-service reveal reveal-delay-1">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            </div>
+            <h3 class="card-title" style="font-size: var(--fs-lg);">Educational Institutions</h3>
+            <p class="card-text" style="margin-bottom: 0;">
+              Schools and educational institutions looking to connect with dedicated Special Education professionals supporting student development.
+            </p>
+          </div>
+
+          <div class="card card-service reveal reveal-delay-2">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            </div>
+            <h3 class="card-title" style="font-size: var(--fs-lg);">Healthcare Organizations</h3>
+            <p class="card-text" style="margin-bottom: 0;">
+              Healthcare organizations looking for dependable staffing support and qualified professionals for essential healthcare services.
+            </p>
+          </div>
+
+          <div class="card card-service reveal reveal-delay-3">
+            <div class="card-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><polyline points="17 11 19 13 23 9"></polyline></svg>
+            </div>
+            <h3 class="card-title" style="font-size: var(--fs-lg);">Professionals</h3>
+            <p class="card-text" style="margin-bottom: 0;">
+              Dedicated professionals seeking meaningful career opportunities across IT, Special Education, and Healthcare.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2 & SECTION 3: CONTACT FORM & CONTACT INFORMATION -->
+    <section class="section bg-light" id="contact-form-section">
+      <div class="container">
+        <div class="enquiry-layout">
+
+          <!-- SECTION 3: CONTACT INFORMATION (Editable Placeholders) -->
+          <div class="enquiry-info-card reveal" id="contact-info">
+            <span class="eyebrow" style="margin-bottom: var(--space-2);">Contact Information</span>
+            <h3>Reach ManGENIUS Staffing LLC</h3>
+            <p>
+              Use the editable company contact details below or submit your enquiry using the form. Update the placeholders in HTML with verified business details prior to launch.
             </p>
 
-            <div class="flex" style="flex-direction: column; gap: var(--space-6);">
-              <div class="feature-box">
-                <div class="feature-icon-wrapper">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                </div>
+            <!-- EDITABLE COMPANY CONTACT DETAILS — Replace placeholders with official details -->
+            <div class="enquiry-info-list">
+              <div class="enquiry-info-item">
+                <span class="enquiry-info-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </span>
                 <div>
-                  <h4 class="feature-title">Telephone (Editable)</h4>
-                  <p class="feature-desc">Toll Free: <a href="tel:+18000000000" class="text-orange">+1 (800) 000-0000</a></p>
-                  <p class="feature-desc">Direct Dispatch: <a href="tel:+18000000001" class="text-orange">+1 (800) 000-0001</a></p>
+                  <strong>Business Email</strong>
+                  <a href="mailto:info@mangeniusstaffing.com">[Editable: info@mangeniusstaffing.com]</a>
                 </div>
               </div>
 
-              <div class="feature-box">
-                <div class="feature-icon-wrapper">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                </div>
+              <div class="enquiry-info-item">
+                <span class="enquiry-info-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                </span>
                 <div>
-                  <h4 class="feature-title">Email Correspondence (Editable)</h4>
-                  <p class="feature-desc">Staffing Inquiries: <a href="mailto:info@mangeniusstaffing.com" class="text-orange">info@mangeniusstaffing.com</a></p>
-                  <p class="feature-desc">Careers & Candidates: <a href="mailto:careers@mangeniusstaffing.com" class="text-orange">careers@mangeniusstaffing.com</a></p>
+                  <strong>Phone Number</strong>
+                  <a href="tel:+10000000000">[Editable: +1 (000) 000-0000]</a>
                 </div>
               </div>
 
-              <div class="feature-box">
-                <div class="feature-icon-wrapper">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                </div>
+              <div class="enquiry-info-item">
+                <span class="enquiry-info-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </span>
                 <div>
-                  <h4 class="feature-title">Corporate Office (Editable)</h4>
-                  <p class="feature-desc">ManGENIUS Staffing LLC Headquarters</p>
-                  <p class="feature-desc">United States [Editable Address]</p>
+                  <strong>Office Address</strong>
+                  <span>[Editable: Street Address, Suite, City, State, ZIP]</span>
+                </div>
+              </div>
+
+              <div class="enquiry-info-item">
+                <span class="enquiry-info-icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                </span>
+                <div>
+                  <strong>Social Media Links (Editable)</strong>
+                  <div class="footer-socials" style="margin-top: 8px; justify-content: flex-start;">
+                    <!-- Replace href URLs below with official ManGENIUS social profile URLs -->
+                    <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="LinkedIn Profile (Editable)">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                    <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Instagram Profile (Editable)">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    </a>
+                    <a href="https://www.indeed.com/" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Indeed Profile (Editable)">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14.22 2.25c-3.79 0-7.03 2.58-7.95 6.26-.08.31.18.59.48.46 1.48-.66 3.16-1.08 4.86-1.15.65-2.06 2.57-3.54 4.84-3.54.9 0 1.74.24 2.46.66.27.16.6-.1.49-.4C18.56 3.18 16.53 2.25 14.22 2.25zm.28 4.35a2.1 2.1 0 1 0 0 4.2 2.1 2.1 0 0 0 0-4.2zm-1.65 5.65v9.5h3.3v-9.5h-3.3z"/></svg>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Quick Request Card Skeleton -->
-          <div>
-            <div class="card card-dark" style="padding: var(--space-8);">
-              <span class="badge badge-orange" style="align-self: flex-start; margin-bottom: var(--space-4);">Talent Dispatch</span>
-              <h3 style="color: var(--color-white); margin-bottom: var(--space-2);">Request Staffing Support</h3>
-              <p style="color: #A3A3A3; margin-bottom: var(--space-6);">
-                Need urgent coverage or scheduling a workforce consultation? Fill out the quick form or call our 24/7 staffing line.
-              </p>
-              
-              <div style="display: flex; flex-direction: column; gap: var(--space-4);">
-                <div style="background: rgba(255,255,255,0.06); padding: var(--space-4); border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.1);">
-                  <div style="color: #FFFFFF; font-weight: var(--fw-semibold); font-size: var(--fs-sm); margin-bottom: 4px;">Staffing Coordinators Standing By</div>
-                  <div style="color: #A0A0A0; font-size: var(--fs-xs);">Average inquiry response turnaround: under 15 minutes.</div>
+          <!-- SECTION 2: CONTACT FORM -->
+          <!--
+            ======================================================================
+            EXTERNAL FORM SERVICE INTEGRATION REQUIRED (e.g., Formspree):
+            This is a static HTML website and does NOT include a backend server to
+            store or transmit form submissions.
+            
+            To enable live email delivery:
+            1. Create a form endpoint with Formspree (https://formspree.io) or an
+               equivalent external form provider.
+            2. Replace YOUR_FORMSPREE_CONTACT_FORM_ID in the action attribute below
+               with your active form endpoint URL.
+            ======================================================================
+          -->
+          <div class="form-card reveal reveal-delay-1">
+            <span class="eyebrow" style="margin-bottom: var(--space-2);">Enquiry Form</span>
+            <h2 style="font-size: clamp(1.45rem, 2.5vw, 1.85rem); margin-bottom: var(--space-2);">Send Us a Message</h2>
+            <p style="font-size: var(--fs-sm); margin-bottom: var(--space-6);">
+              Complete the form below and share how ManGENIUS Staffing LLC can assist your organization or career search.
+            </p>
+
+            <form
+              id="contactEnquiryForm"
+              action="https://formspree.io/f/YOUR_FORMSPREE_CONTACT_FORM_ID"
+              method="POST"
+              novalidate
+            >
+              <input type="hidden" name="_subject" value="New Contact Enquiry — ManGENIUS Staffing LLC">
+
+              <div id="contactFormStatus" class="form-status" role="status" aria-live="polite"></div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="contactFullName" class="form-label">Full Name<span class="form-required">*</span></label>
+                  <input
+                    type="text"
+                    id="contactFullName"
+                    name="full_name"
+                    class="form-control"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                    required
+                    aria-describedby="contactFullNameError"
+                  >
+                  <span id="contactFullNameError" class="form-error" role="alert"></span>
                 </div>
 
-                <a href="tel:+18000000000" class="btn btn-orange btn-lg" style="width: 100%;">
-                  Call Staffing Desk: +1 (800) 000-0000
-                </a>
-                <a href="mailto:info@mangeniusstaffing.com" class="btn btn-outline-white" style="width: 100%;">
-                  Email Request Directly
-                </a>
+                <div class="form-group">
+                  <label for="contactEmail" class="form-label">Email Address<span class="form-required">*</span></label>
+                  <input
+                    type="email"
+                    id="contactEmail"
+                    name="email"
+                    class="form-control"
+                    placeholder="you@organization.com"
+                    autocomplete="email"
+                    required
+                    aria-describedby="contactEmailError"
+                  >
+                  <span id="contactEmailError" class="form-error" role="alert"></span>
+                </div>
               </div>
-            </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="contactPhone" class="form-label">Phone Number<span class="form-required">*</span></label>
+                  <input
+                    type="tel"
+                    id="contactPhone"
+                    name="phone"
+                    class="form-control"
+                    placeholder="+1 (000) 000-0000"
+                    autocomplete="tel"
+                    required
+                    aria-describedby="contactPhoneError"
+                  >
+                  <span id="contactPhoneError" class="form-error" role="alert"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="contactOrganization" class="form-label">Organization Name <span style="font-weight: 400; color: var(--color-muted-grey);">(Optional)</span></label>
+                  <input
+                    type="text"
+                    id="contactOrganization"
+                    name="organization_name"
+                    class="form-control"
+                    placeholder="Company, school, or healthcare facility"
+                    autocomplete="organization"
+                  >
+                </div>
+              </div>
+
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label for="contactRole" class="form-label">I am contacting you as<span class="form-required">*</span></label>
+                  <select
+                    id="contactRole"
+                    name="contacting_as"
+                    class="form-control"
+                    required
+                    aria-describedby="contactRoleError"
+                  >
+                    <option value="">Select an option</option>
+                    <option value="Employer">Employer</option>
+                    <option value="Job Seeker">Job Seeker</option>
+                    <option value="Educational Institution">Educational Institution</option>
+                    <option value="Healthcare Organization">Healthcare Organization</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <span id="contactRoleError" class="form-error" role="alert"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="contactService" class="form-label">Interested Staffing Service<span class="form-required">*</span></label>
+                  <select
+                    id="contactService"
+                    name="interested_service"
+                    class="form-control"
+                    required
+                    aria-describedby="contactServiceError"
+                  >
+                    <option value="">Select a service</option>
+                    <option value="Information Technology Staffing">Information Technology Staffing</option>
+                    <option value="Special Education Staffing">Special Education Staffing</option>
+                    <option value="Healthcare Staffing">Healthcare Staffing</option>
+                    <option value="General Enquiry">General Enquiry</option>
+                  </select>
+                  <span id="contactServiceError" class="form-error" role="alert"></span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="contactMessage" class="form-label">Message<span class="form-required">*</span></label>
+                <textarea
+                  id="contactMessage"
+                  name="message"
+                  class="form-control"
+                  rows="5"
+                  placeholder="Tell us about your staffing needs, timeline, or career enquiry."
+                  required
+                  aria-describedby="contactMessageError"
+                ></textarea>
+                <span id="contactMessageError" class="form-error" role="alert"></span>
+              </div>
+
+              <button type="submit" class="btn btn-orange btn-lg">
+                <span>Submit Enquiry</span>
+                <svg class="icon icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </button>
+
+              <div class="form-integration-note">
+                <strong>Form Integration Notice:</strong> This static form performs client-side validation and is prepared for an external form service (such as Formspree). Live delivery requires replacing the placeholder endpoint URL in the form's <code>action</code> attribute; submissions are not stored or sent until connected.
+              </div>
+            </form>
           </div>
 
         </div>
       </div>
     </section>
+
+    <!-- SECTION 4: CTA -->
+    <section class="section bg-dark" id="cta" style="border-top: 1px solid rgba(255, 255, 255, 0.08); position: relative; overflow: hidden;">
+      <div style="position: absolute; top: 0; right: 0; bottom: 0; width: 45%; background: radial-gradient(circle at 70% 30%, rgba(255, 107, 26, 0.15) 0%, transparent 70%); pointer-events: none;"></div>
+      <div class="container" style="position: relative; z-index: 2;">
+        <div class="flex-between reveal" style="flex-wrap: wrap; gap: var(--space-8); align-items: center;">
+          <div style="max-width: 680px;">
+            <span class="eyebrow">Workforce Solutions</span>
+            <h2 class="text-white" style="margin-bottom: var(--space-3);">Let's Find the Right Solution.</h2>
+            <p style="color: #C0C0C0; font-size: var(--fs-md); line-height: var(--lh-relaxed); margin-bottom: 0;">
+              Connect with ManGENIUS Staffing and explore how our staffing solutions can support your workforce requirements.
+            </p>
+          </div>
+          <div class="flex gap-4" style="flex-wrap: wrap;">
+            <a href="services.html" class="btn btn-orange btn-lg">
+              <span>Explore Our Services</span>
+              <svg class="icon icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+            <a href="careers.html" class="btn btn-outline-white btn-lg">Explore Careers</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- =========================================================================
@@ -277,30 +529,30 @@
               <img src="images/logo.png" alt="ManGENIUS Staffing LLC Logo" width="180" height="86">
             </a>
             <p class="footer-about">
-              ManGENIUS Staffing LLC is a premier workforce solutions provider delivering elite healthcare, educational, and corporate personnel across the United States.
+              ManGENIUS Staffing LLC is a workforce solutions and staffing company connecting organizations with talented professionals across Information Technology, Special Education, and Healthcare.
             </p>
             <div class="footer-contact-list">
               <div class="footer-contact-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                <span>Phone: <a href="tel:+18000000000">+1 (800) 000-0000</a> [Editable]</span>
+                <span>Phone: <a href="tel:+10000000000">[Editable: +1 (000) 000-0000]</a></span>
               </div>
               <div class="footer-contact-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <span>Email: <a href="mailto:info@mangeniusstaffing.com">info@mangeniusstaffing.com</a> [Editable]</span>
+                <span>Email: <a href="mailto:info@mangeniusstaffing.com">[Editable: info@mangeniusstaffing.com]</a></span>
               </div>
               <div class="footer-contact-item">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span>Headquarters: United States [Editable]</span>
+                <span>Address: [Editable: Office Address]</span>
               </div>
             </div>
             <div class="footer-socials">
-              <a href="#" class="social-icon-btn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
-              <a href="#" class="social-icon-btn" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg></a>
-              <a href="#" class="social-icon-btn" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+              <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+              <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+              <a href="https://www.indeed.com/" target="_blank" rel="noopener noreferrer" class="social-icon-btn" aria-label="Indeed"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.22 2.25c-3.79 0-7.03 2.58-7.95 6.26-.08.31.18.59.48.46 1.48-.66 3.16-1.08 4.86-1.15.65-2.06 2.57-3.54 4.84-3.54.9 0 1.74.24 2.46.66.27.16.6-.1.49-.4C18.56 3.18 16.53 2.25 14.22 2.25zm.28 4.35a2.1 2.1 0 1 0 0 4.2 2.1 2.1 0 0 0 0-4.2zm-1.65 5.65v9.5h3.3v-9.5h-3.3z"/></svg></a>
             </div>
           </div>
           <div>
-            <h4 class="footer-col-title">Navigation</h4>
+            <h3 class="footer-col-title">Navigation</h3>
             <ul class="footer-links">
               <li><a href="index.html">Home</a></li>
               <li><a href="about.html">About Us</a></li>
@@ -310,22 +562,20 @@
             </ul>
           </div>
           <div>
-            <h4 class="footer-col-title">Services</h4>
+            <h3 class="footer-col-title">Services</h3>
             <ul class="footer-links">
-              <li><a href="services.html">IT Staffing</a></li>
-              <li><a href="services.html">Special Education Staffing</a></li>
-              <li><a href="services.html">Healthcare Staffing</a></li>
-              <li><a href="services.html">Temporary Staffing</a></li>
-              <li><a href="services.html">Permanent Recruitment</a></li>
-              <li><a href="services.html">Workforce Solutions</a></li>
+              <li><a href="services.html#it-staffing">IT Staffing</a></li>
+              <li><a href="services.html#special-education-staffing">Special Education Staffing</a></li>
+              <li><a href="services.html#healthcare-staffing">Healthcare Staffing</a></li>
+              <li><a href="services.html#staffing-approach">Our Staffing Approach</a></li>
             </ul>
           </div>
           <div>
-            <h4 class="footer-col-title">Staffing Inquiries</h4>
+            <h3 class="footer-col-title">Staffing Inquiries</h3>
             <div class="footer-cta-card">
-              <h5>Need Talent Immediately?</h5>
-              <p>Our staffing specialists are available 24/7 to solve your clinical and professional workforce shortages.</p>
-              <a href="contact.html" class="btn btn-orange btn-sm" style="width: 100%;">Submit Talent Request</a>
+              <h4>Looking for Talent?</h4>
+              <p>Connect with our staffing specialists to discuss your workforce requirements across IT, Special Education, and Healthcare.</p>
+              <a href="#contact-form-section" class="btn btn-orange btn-sm" style="width: 100%;">Submit Talent Request</a>
             </div>
           </div>
         </div>
@@ -338,7 +588,6 @@
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Service</a>
           <a href="#">Accessibility Statement</a>
-          <a href="#">Compliance & Credentialing</a>
         </div>
       </div>
     </div>

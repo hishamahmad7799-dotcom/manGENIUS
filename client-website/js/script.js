@@ -151,9 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdown = item.querySelector('.dropdown-menu');
 
     if (parentLink && dropdown) {
-      // Handle Enter or Space key for keyboard users
+      // Handle Space or ArrowDown key for keyboard users (Enter follows link naturally)
       parentLink.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+        if (e.key === ' ' || e.key === 'ArrowDown') {
           e.preventDefault();
           dropdown.style.opacity = '1';
           dropdown.style.visibility = 'visible';
@@ -170,6 +170,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Escape') {
           dropdown.removeAttribute('style');
           parentLink.focus();
+        }
+      });
+
+      // Reset inline styles when keyboard focus leaves the dropdown item
+      item.addEventListener('focusout', (e) => {
+        if (!item.contains(e.relatedTarget)) {
+          dropdown.removeAttribute('style');
         }
       });
     }
@@ -586,6 +593,296 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       counterElements.forEach(counter => animateCounter(counter));
     }
+  }
+
+  /* --------------------------------------------------------------------------
+     11. CAREERS ENQUIRY FORM VALIDATION & STAFFING AREA PRE-SELECTION
+     -------------------------------------------------------------------------- */
+  const careersForm = document.getElementById('careersEnquiryForm');
+  if (careersForm) {
+    const areaSelect = document.getElementById('staffingArea');
+    const statusBox = document.getElementById('careersFormStatus');
+
+    // Pre-select Preferred Staffing Area when clicking "Express Interest" cards
+    document.querySelectorAll('[data-staffing-area]').forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const area = trigger.getAttribute('data-staffing-area');
+        if (areaSelect && area) {
+          areaSelect.value = area;
+          areaSelect.classList.remove('is-invalid');
+          const errEl = document.getElementById('staffingAreaError');
+          if (errEl) {
+            errEl.textContent = '';
+            errEl.classList.remove('visible');
+          }
+        }
+      });
+    });
+
+    const validators = {
+      fullName: (val) => {
+        if (!val.trim()) return 'Please enter your full name.';
+        if (val.trim().length < 2) return 'Please enter at least 2 characters for your full name.';
+        return '';
+      },
+      emailAddress: (val) => {
+        if (!val.trim()) return 'Please enter your email address.';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(val.trim())) return 'Please enter a valid email address.';
+        return '';
+      },
+      phoneNumber: (val) => {
+        if (!val.trim()) return 'Please enter your phone number.';
+        const digits = val.replace(/\D/g, '');
+        if (digits.length < 7 || digits.length > 15) return 'Please enter a valid phone number (7 to 15 digits).';
+        return '';
+      },
+      staffingArea: (val) => {
+        const allowed = ['Information Technology', 'Special Education', 'Healthcare'];
+        if (!allowed.includes(val)) return 'Please select a preferred staffing area.';
+        return '';
+      },
+      relevantExperience: (val) => {
+        if (!val.trim()) return 'Please briefly describe your relevant experience.';
+        if (val.trim().length < 3) return 'Please provide a brief summary of your relevant experience.';
+        return '';
+      },
+      careerMessage: (val) => {
+        if (!val.trim()) return 'Please enter a message about the opportunities you are interested in.';
+        if (val.trim().length < 10) return 'Please enter at least 10 characters in your message.';
+        return '';
+      }
+    };
+
+    const setFieldError = (fieldId, message) => {
+      const input = document.getElementById(fieldId);
+      const errEl = document.getElementById(`${fieldId}Error`);
+      if (!input || !errEl) return;
+      if (message) {
+        input.classList.add('is-invalid');
+        input.setAttribute('aria-invalid', 'true');
+        errEl.textContent = message;
+        errEl.classList.add('visible');
+      } else {
+        input.classList.remove('is-invalid');
+        input.removeAttribute('aria-invalid');
+        errEl.textContent = '';
+        errEl.classList.remove('visible');
+      }
+    };
+
+    const showStatus = (type, message) => {
+      if (!statusBox) return;
+      statusBox.className = `form-status is-visible is-${type}`;
+      statusBox.textContent = message;
+    };
+
+    Object.keys(validators).forEach((fieldId) => {
+      const el = document.getElementById(fieldId);
+      if (!el) return;
+      const evt = el.tagName === 'SELECT' ? 'change' : 'input';
+      el.addEventListener(evt, () => {
+        if (el.classList.contains('is-invalid')) {
+          setFieldError(fieldId, validators[fieldId](el.value));
+        }
+      });
+      el.addEventListener('blur', () => {
+        setFieldError(fieldId, validators[fieldId](el.value));
+      });
+    });
+
+    careersForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      let firstInvalid = null;
+      Object.keys(validators).forEach((fieldId) => {
+        const el = document.getElementById(fieldId);
+        if (!el) return;
+        const errMsg = validators[fieldId](el.value);
+        setFieldError(fieldId, errMsg);
+        if (errMsg && !firstInvalid) {
+          firstInvalid = el;
+        }
+      });
+
+      if (firstInvalid) {
+        showStatus('error', 'Please review and complete the highlighted fields before submitting your enquiry.');
+        firstInvalid.focus();
+        return;
+      }
+
+      const actionUrl = (careersForm.getAttribute('action') || '').trim();
+      const isPlaceholder = !actionUrl || actionUrl === '#' || actionUrl.includes('YOUR_FORMSPREE_FORM_ID');
+
+      if (isPlaceholder) {
+        showStatus(
+          'info',
+          'Form validation passed. This static website requires connecting an external form endpoint (such as Formspree) in the form action attribute to submit and receive enquiries. No information has been stored.'
+        );
+        return;
+      }
+
+      const submitBtn = careersForm.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const response = await fetch(actionUrl, {
+          method: 'POST',
+          body: new FormData(careersForm),
+          headers: { Accept: 'application/json' }
+        });
+
+        if (response.ok) {
+          showStatus('success', 'Thank you for expressing your interest. Your enquiry has been sent to the ManGENIUS Staffing LLC team.');
+          careersForm.reset();
+        } else {
+          showStatus('error', 'We could not deliver your enquiry through the configured form service. Please try again or contact us directly by email or phone.');
+        }
+      } catch (err) {
+        showStatus('error', 'A network error prevented delivery. Please check your connection or contact us directly by email or phone.');
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     12. CONTACT ENQUIRY FORM VALIDATION (contact.html)
+     -------------------------------------------------------------------------- */
+  const contactForm = document.getElementById('contactEnquiryForm');
+  if (contactForm) {
+    const statusBox = document.getElementById('contactFormStatus');
+
+    const contactValidators = {
+      contactFullName: (val) => {
+        if (!val.trim()) return 'Please enter your full name.';
+        if (val.trim().length < 2) return 'Please enter at least 2 characters for your full name.';
+        return '';
+      },
+      contactEmail: (val) => {
+        if (!val.trim()) return 'Please enter your email address.';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(val.trim())) return 'Please enter a valid email address.';
+        return '';
+      },
+      contactPhone: (val) => {
+        if (!val.trim()) return 'Please enter your phone number.';
+        const digits = val.replace(/\D/g, '');
+        if (digits.length < 7 || digits.length > 15) return 'Please enter a valid phone number (7 to 15 digits).';
+        return '';
+      },
+      contactRole: (val) => {
+        const allowed = ['Employer', 'Job Seeker', 'Educational Institution', 'Healthcare Organization', 'Other'];
+        if (!allowed.includes(val)) return 'Please select who you are contacting us as.';
+        return '';
+      },
+      contactService: (val) => {
+        const allowed = [
+          'Information Technology Staffing',
+          'Special Education Staffing',
+          'Healthcare Staffing',
+          'General Enquiry'
+        ];
+        if (!allowed.includes(val)) return 'Please select an interested staffing service.';
+        return '';
+      },
+      contactMessage: (val) => {
+        if (!val.trim()) return 'Please enter your message.';
+        if (val.trim().length < 10) return 'Please provide at least 10 characters so we can better understand your enquiry.';
+        return '';
+      }
+    };
+
+    const setContactFieldError = (fieldId, message) => {
+      const input = document.getElementById(fieldId);
+      const errEl = document.getElementById(`${fieldId}Error`);
+      if (!input || !errEl) return;
+      if (message) {
+        input.classList.add('is-invalid');
+        input.setAttribute('aria-invalid', 'true');
+        errEl.textContent = message;
+        errEl.classList.add('visible');
+      } else {
+        input.classList.remove('is-invalid');
+        input.removeAttribute('aria-invalid');
+        errEl.textContent = '';
+        errEl.classList.remove('visible');
+      }
+    };
+
+    const showContactStatus = (type, message) => {
+      if (!statusBox) return;
+      statusBox.className = `form-status is-visible is-${type}`;
+      statusBox.textContent = message;
+    };
+
+    Object.keys(contactValidators).forEach((fieldId) => {
+      const el = document.getElementById(fieldId);
+      if (!el) return;
+      const evt = el.tagName === 'SELECT' ? 'change' : 'input';
+      el.addEventListener(evt, () => {
+        if (el.classList.contains('is-invalid')) {
+          setContactFieldError(fieldId, contactValidators[fieldId](el.value));
+        }
+      });
+      el.addEventListener('blur', () => {
+        setContactFieldError(fieldId, contactValidators[fieldId](el.value));
+      });
+    });
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      let firstInvalid = null;
+      Object.keys(contactValidators).forEach((fieldId) => {
+        const el = document.getElementById(fieldId);
+        if (!el) return;
+        const errMsg = contactValidators[fieldId](el.value);
+        setContactFieldError(fieldId, errMsg);
+        if (errMsg && !firstInvalid) {
+          firstInvalid = el;
+        }
+      });
+
+      if (firstInvalid) {
+        showContactStatus('error', 'Please review and complete the highlighted required fields before submitting.');
+        firstInvalid.focus();
+        return;
+      }
+
+      const actionUrl = (contactForm.getAttribute('action') || '').trim();
+      const isPlaceholder = !actionUrl || actionUrl === '#' || actionUrl.includes('YOUR_FORMSPREE');
+
+      if (isPlaceholder) {
+        showContactStatus(
+          'info',
+          'Form validation passed. Because this is a static website, an external form service endpoint (such as Formspree) must be configured on the form action attribute to receive live submissions. No data has been stored or transmitted.'
+        );
+        return;
+      }
+
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      try {
+        const response = await fetch(actionUrl, {
+          method: 'POST',
+          body: new FormData(contactForm),
+          headers: { Accept: 'application/json' }
+        });
+
+        if (response.ok) {
+          showContactStatus('success', 'Thank you for reaching out. Your enquiry has been sent to ManGENIUS Staffing LLC.');
+          contactForm.reset();
+        } else {
+          showContactStatus('error', 'We could not submit your enquiry through the configured form service. Please try again later or reach out directly.');
+        }
+      } catch (err) {
+        showContactStatus('error', 'A network error prevented delivery. Please check your connection or reach out directly.');
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
   }
 
   console.log('ManGENIUS Staffing LLC - Master Scripts, Carousels & Live Counters Active.');
