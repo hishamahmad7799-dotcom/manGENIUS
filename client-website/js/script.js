@@ -596,12 +596,25 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     11. CAREERS ENQUIRY FORM VALIDATION & STAFFING AREA PRE-SELECTION
+     11. CAREERS ENQUIRY FORM VALIDATION, RESUME UPLOAD & AREA PRE-SELECTION
      -------------------------------------------------------------------------- */
   const careersForm = document.getElementById('careersEnquiryForm');
   if (careersForm) {
     const areaSelect = document.getElementById('staffingArea');
     const statusBox = document.getElementById('careersFormStatus');
+    const resumeInput = document.getElementById('resumeUpload');
+    const resumeWrapper = document.getElementById('resumeUploadWrapper');
+    const resumeSelectedText = document.getElementById('resumeSelectedFile');
+    const privacyCheckbox = document.getElementById('privacyConsent');
+
+    // Configured maximum file size (in MB) aligned with upload provider settings
+    const maxFileSizeMB = parseFloat(careersForm.getAttribute('data-max-file-size-mb')) || 10;
+    const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024;
+    const allowedExtensions = ['.pdf', '.docx'];
+    const allowedMimeTypes = [
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
 
     // Pre-select Preferred Staffing Area when clicking "Express Interest" cards
     document.querySelectorAll('[data-staffing-area]').forEach((trigger) => {
@@ -618,6 +631,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+
+    const validateResumeFile = () => {
+      if (!resumeInput) return '';
+      const files = resumeInput.files;
+      if (!files || files.length === 0) {
+        return 'Please upload your resume in PDF or DOCX format.';
+      }
+      const file = files[0];
+      const lowerName = (file.name || '').toLowerCase();
+      const hasValidExt = allowedExtensions.some((ext) => lowerName.endsWith(ext));
+      const hasValidMime = !file.type || allowedMimeTypes.includes(file.type);
+      if (!hasValidExt || !hasValidMime) {
+        return 'Unsupported file type. Please upload a PDF (.pdf) or Word (.docx) document.';
+      }
+      if (file.size > maxFileSizeBytes) {
+        return `File size exceeds the ${maxFileSizeMB} MB maximum limit. Please upload a smaller PDF or DOCX file.`;
+      }
+      return '';
+    };
 
     const validators = {
       fullName: (val) => {
@@ -661,11 +693,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (message) {
         input.classList.add('is-invalid');
         input.setAttribute('aria-invalid', 'true');
+        if (fieldId === 'resumeUpload' && resumeWrapper) resumeWrapper.classList.add('is-invalid');
         errEl.textContent = message;
         errEl.classList.add('visible');
       } else {
         input.classList.remove('is-invalid');
         input.removeAttribute('aria-invalid');
+        if (fieldId === 'resumeUpload' && resumeWrapper) resumeWrapper.classList.remove('is-invalid');
         errEl.textContent = '';
         errEl.classList.remove('visible');
       }
@@ -691,6 +725,34 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    if (resumeInput) {
+      resumeInput.addEventListener('change', () => {
+        const errMsg = validateResumeFile();
+        setFieldError('resumeUpload', errMsg);
+        if (resumeSelectedText) {
+          if (!errMsg && resumeInput.files && resumeInput.files[0]) {
+            const f = resumeInput.files[0];
+            const sizeText = f.size >= 1024 * 1024
+              ? `${(f.size / (1024 * 1024)).toFixed(2)} MB`
+              : `${Math.max(1, Math.round(f.size / 1024))} KB`;
+            resumeSelectedText.textContent = `Selected file: ${f.name} (${sizeText})`;
+            resumeSelectedText.classList.add('visible');
+          } else {
+            resumeSelectedText.textContent = '';
+            resumeSelectedText.classList.remove('visible');
+          }
+        }
+      });
+    }
+
+    if (privacyCheckbox) {
+      privacyCheckbox.addEventListener('change', () => {
+        if (privacyCheckbox.checked) {
+          setFieldError('privacyConsent', '');
+        }
+      });
+    }
+
     careersForm.addEventListener('submit', async (e) => {
       e.preventDefault();
 
@@ -705,19 +767,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
+      const resumeErr = validateResumeFile();
+      setFieldError('resumeUpload', resumeErr);
+      if (resumeErr && !firstInvalid && resumeInput) {
+        firstInvalid = resumeInput;
+      }
+
+      if (privacyCheckbox) {
+        const privacyErr = privacyCheckbox.checked
+          ? ''
+          : 'Please confirm that you have read the Privacy Policy before submitting.';
+        setFieldError('privacyConsent', privacyErr);
+        if (privacyErr && !firstInvalid) {
+          firstInvalid = privacyCheckbox;
+        }
+      }
+
       if (firstInvalid) {
-        showStatus('error', 'Please review and complete the highlighted fields before submitting your enquiry.');
+        showStatus('error', 'Please review and complete the highlighted required fields before submitting your enquiry.');
         firstInvalid.focus();
         return;
       }
 
       const actionUrl = (careersForm.getAttribute('action') || '').trim();
-      const isPlaceholder = !actionUrl || actionUrl === '#' || actionUrl.includes('YOUR_FORMSPREE_FORM_ID');
+      const isPlaceholder = !actionUrl || actionUrl === '#' || actionUrl.includes('YOUR_FORMSPREE') || actionUrl.includes('YOUR_UPLOAD_ENDPOINT');
 
       if (isPlaceholder) {
         showStatus(
-          'info',
-          'Form validation passed. This static website requires connecting an external form endpoint (such as Formspree) in the form action attribute to submit and receive enquiries. No information has been stored.'
+          'error',
+          'Submission unavailable: the external form and resume upload endpoint is not yet configured. Please configure an active Formspree (or secure upload backend) URL in the form action attribute. Your resume and information were not uploaded or stored.'
         );
         return;
       }
@@ -733,13 +811,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (response.ok) {
-          showStatus('success', 'Thank you for expressing your interest. Your enquiry has been sent to the ManGENIUS Staffing LLC team.');
+          showStatus('success', 'Thank you for expressing your interest. Your enquiry and resume have been received by the configured upload service.');
           careersForm.reset();
+          if (resumeSelectedText) {
+            resumeSelectedText.textContent = '';
+            resumeSelectedText.classList.remove('visible');
+          }
         } else {
-          showStatus('error', 'We could not deliver your enquiry through the configured form service. Please try again or contact us directly by email or phone.');
+          let providerMsg = 'The external upload service could not accept your submission. Please verify the file type and size or try again later.';
+          try {
+            const data = await response.json();
+            if (data && Array.isArray(data.errors) && data.errors.length > 0 && data.errors[0].message) {
+              providerMsg = `Submission error from upload service: ${data.errors[0].message}`;
+            }
+          } catch (_) {
+            // Non-JSON error response
+          }
+          showStatus('error', providerMsg);
         }
       } catch (err) {
-        showStatus('error', 'A network error prevented delivery. Please check your connection or contact us directly by email or phone.');
+        showStatus('error', 'A network error prevented delivery to the upload service. Please check your connection or contact us directly.');
       } finally {
         if (submitBtn) submitBtn.disabled = false;
       }

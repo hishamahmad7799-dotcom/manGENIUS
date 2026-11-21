@@ -438,17 +438,27 @@
 
           <!-- Right Form Card -->
           <!--
-            EXTERNAL FORM INTEGRATION REQUIRED (e.g., Formspree):
-            This static HTML page does not store form submissions on a backend server.
-            To enable live submissions, replace YOUR_FORMSPREE_FORM_ID in the action URL below
-            with your active Formspree endpoint (https://formspree.io/f/your-id) or another
-            external form-handling service URL.
+            ======================================================================
+            EXTERNAL FORM & RESUME UPLOAD INTEGRATION REQUIRED (e.g., Formspree):
+            This static HTML page does NOT store uploaded resumes in a public
+            website folder or backend server.
+            
+            Before going live:
+            1. Configure a reputable external form/upload provider (such as a
+               Formspree plan supporting file uploads, or a secure backend).
+            2. Replace YOUR_FORMSPREE_FORM_ID in the action attribute below with
+               your active endpoint URL. Do NOT place secret API keys in frontend JS.
+            3. Confirm data-max-file-size-mb matches your upload provider's limit
+               and enforce PDF/DOCX type & size restrictions on the upload service.
+            ======================================================================
           -->
           <div class="form-card reveal reveal-delay-1">
             <form
               id="careersEnquiryForm"
               action="https://formspree.io/f/YOUR_FORMSPREE_FORM_ID"
               method="POST"
+              enctype="multipart/form-data"
+              data-max-file-size-mb="10"
               novalidate
             >
               <input type="hidden" name="_subject" value="New Career Interest Enquiry — ManGENIUS Staffing LLC">
@@ -549,13 +559,66 @@
                 <span id="careerMessageError" class="form-error" role="alert"></span>
               </div>
 
+              <div class="form-group">
+                <label for="resumeUpload" class="form-label">Resume Upload<span class="form-required">*</span></label>
+                <div class="file-upload-wrapper" id="resumeUploadWrapper">
+                  <input
+                    type="file"
+                    id="resumeUpload"
+                    name="resume"
+                    class="file-upload-input"
+                    accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    required
+                    aria-describedby="resumeUploadHint resumeUploadError"
+                  >
+                  <span id="resumeUploadHint" class="file-upload-hint">
+                    Accepted formats: <strong>PDF (.pdf)</strong> and <strong>DOCX (.docx)</strong> &bull; Maximum file size: <strong>10 MB</strong> (subject to configured upload provider). Please do not include Social Security numbers or unnecessary sensitive personal information.
+                  </span>
+                  <span id="resumeSelectedFile" class="file-upload-selected" aria-live="polite"></span>
+                </div>
+                <span id="resumeUploadError" class="form-error" role="alert"></span>
+              </div>
+
+              <div class="form-checkbox-group">
+                <label class="form-checkbox-label" for="privacyConsent">
+                  <input
+                    type="checkbox"
+                    id="privacyConsent"
+                    name="privacy_acknowledged"
+                    value="yes"
+                    class="form-checkbox-input"
+                    required
+                    aria-describedby="privacyConsentError"
+                  >
+                  <span>
+                    I have read the <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and understand how my information may be used for recruitment-related purposes.<span class="form-required">*</span>
+                  </span>
+                </label>
+                <span id="privacyConsentError" class="form-error" role="alert"></span>
+              </div>
+
+              <div class="form-checkbox-group" style="margin-bottom: var(--space-6);">
+                <label class="form-checkbox-label" for="futureContactConsent">
+                  <input
+                    type="checkbox"
+                    id="futureContactConsent"
+                    name="future_opportunities_opt_in"
+                    value="yes"
+                    class="form-checkbox-input"
+                  >
+                  <span>
+                    I agree to be contacted about relevant future career opportunities. <span style="color: var(--color-muted-grey); font-size: 12px;">(Optional)</span>
+                  </span>
+                </label>
+              </div>
+
               <button type="submit" class="btn btn-orange btn-lg">
                 <span>Submit Career Enquiry</span>
                 <svg class="icon icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
               </button>
 
               <div class="form-integration-note">
-                <strong>Form Integration Notice:</strong> This form includes client-side validation and is prepared for an external form service (such as Formspree). Submitting enquiries live requires configuring an active endpoint URL in the form's <code>action</code> attribute; this static site does not store submissions locally.
+                <strong>Resume Upload &amp; Form Integration Notice:</strong> This static form validates required fields, PDF/DOCX file type, and 10 MB size limit in the browser and is prepared for an external upload provider (such as Formspree with file uploads enabled or a secure backend). Uploaded files are never stored in a public website folder; live submissions require configuring an active endpoint URL in the form's <code>action</code> attribute.
               </div>
             </form>
           </div>
@@ -655,9 +718,8 @@
       <div class="container footer-bottom-content">
         <div>&copy; 2026 ManGENIUS Staffing LLC. All rights reserved. Equal Opportunity Employer.</div>
         <div class="footer-legal-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Accessibility Statement</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-of-use.html">Terms of Use</a>
         </div>
       </div>
     </div>
