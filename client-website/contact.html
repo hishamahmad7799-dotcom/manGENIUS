@@ -334,17 +334,11 @@
 
           <!-- SECTION 2: CONTACT FORM -->
           <!--
-            ======================================================================
-            EXTERNAL FORM SERVICE INTEGRATION REQUIRED (e.g., Formspree):
-            This is a static HTML website and does NOT include a backend server to
-            store or transmit form submissions.
-            
-            To enable live email delivery:
-            1. Create a form endpoint with Formspree (https://formspree.io) or an
-               equivalent external form provider.
-            2. Replace YOUR_FORMSPREE_CONTACT_FORM_ID in the action attribute below
-               with your active form endpoint URL.
-            ======================================================================
+            SUPABASE INTEGRATION:
+            - Submitted enquiries are validated client-side and saved directly to
+              public.contact_submissions via the official Supabase JS client.
+            - Row Level Security (RLS) restricts public access to INSERT only.
+            - Database schema & policies are provided in supabase/schema.sql.
           -->
           <div class="form-card reveal reveal-delay-1">
             <span class="eyebrow" style="margin-bottom: var(--space-2);">Enquiry Form</span>
@@ -355,7 +349,6 @@
 
             <form
               id="contactEnquiryForm"
-              action="https://formspree.io/f/YOUR_FORMSPREE_CONTACT_FORM_ID"
               method="POST"
               novalidate
             >
@@ -483,7 +476,7 @@
               </button>
 
               <div class="form-integration-note">
-                <strong>Form Integration Notice:</strong> This static form performs client-side validation and is prepared for an external form service (such as Formspree). Live delivery requires replacing the placeholder endpoint URL in the form's <code>action</code> attribute; submissions are not stored or sent until connected.
+                <strong>Privacy &amp; Security Notice:</strong> Your enquiry is transmitted securely to ManGENIUS Staffing LLC via Supabase with Row Level Security enabled so submissions remain private. Review our <a href="privacy-policy.html" style="color: var(--color-orange); text-decoration: underline;">Privacy Policy</a> for details.
               </div>
             </form>
           </div>
@@ -596,6 +589,8 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
   </button>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>

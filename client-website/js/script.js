@@ -596,7 +596,64 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     11. CAREERS ENQUIRY FORM VALIDATION, RESUME UPLOAD & AREA PRE-SELECTION
+     SUPABASE HELPERS (Shared by Careers & Contact Forms)
+     -------------------------------------------------------------------------- */
+  const getSupabaseClient = () => window.mangeniusSupabase || null;
+  const getSupabaseConfig = () => window.MANGENIUS_SUPABASE_CONFIG || {
+    resumesBucket: 'resumes',
+    maxResumeSizeMB: 10,
+    emailEdgeFunction: 'send-notification-email',
+    enableEmailNotifications: false
+  };
+
+  const generateSafeUploadId = () => {
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      return window.crypto.randomUUID();
+    }
+    return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  };
+
+  const resolveResumeMimeType = (file) => {
+    const extMap = {
+      '.pdf': 'application/pdf',
+      '.doc': 'application/msword',
+      '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    };
+    const lower = (file.name || '').toLowerCase();
+    for (const ext of Object.keys(extMap)) {
+      if (lower.endsWith(ext)) {
+        return file.type && Object.values(extMap).includes(file.type) ? file.type : extMap[ext];
+      }
+    }
+    return file.type || 'application/octet-stream';
+  };
+
+  const buildPrivateResumePath = (fileName) => {
+    const now = new Date();
+    const ym = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}`;
+    const safeName = (fileName || 'resume.pdf')
+      .replace(/[^a-zA-Z0-9._-]/g, '_')
+      .replace(/_{2,}/g, '_')
+      .slice(-120);
+    return `applications/${ym}/${generateSafeUploadId()}-${safeName}`;
+  };
+
+  const triggerOptionalEmailNotification = async (type, data) => {
+    const cfg = getSupabaseConfig();
+    const client = getSupabaseClient();
+    if (!cfg.enableEmailNotifications || !client || !cfg.emailEdgeFunction) return;
+    try {
+      await client.functions.invoke(cfg.emailEdgeFunction, {
+        body: { type, data }
+      });
+    } catch (err) {
+      // Non-blocking: submission is already safely stored in Supabase
+      console.warn('Optional notification Edge Function skipped or failed:', err);
+    }
+  };
+
+  /* --------------------------------------------------------------------------
+     11. CAREERS ENQUIRY FORM VALIDATION, RESUME UPLOAD & SUPABASE SUBMISSION
      -------------------------------------------------------------------------- */
   const careersForm = document.getElementById('careersEnquiryForm');
   if (careersForm) {
@@ -606,15 +663,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const resumeWrapper = document.getElementById('resumeUploadWrapper');
     const resumeSelectedText = document.getElementById('resumeSelectedFile');
     const privacyCheckbox = document.getElementById('privacyConsent');
+    const futureContactCheckbox = document.getElementById('futureContactConsent');
 
-    // Configured maximum file size (in MB) aligned with upload provider settings
-    const maxFileSizeMB = parseFloat(careersForm.getAttribute('data-max-file-size-mb')) || 10;
+    const supaCfg = getSupabaseConfig();
+    const maxFileSizeMB = parseFloat(careersForm.getAttribute('data-max-file-size-mb')) || supaCfg.maxResumeSizeMB || 10;
     const maxFileSizeBytes = maxFileSizeMB * 1024 * 1024;
-    const allowedExtensions = ['.pdf', '.docx'];
+    const allowedExtensions = ['.pdf', '.doc', '.docx'];
     const allowedMimeTypes = [
       'application/pdf',
+      'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ];
+    let isSubmittingCareers = false;
 
     // Pre-select Preferred Staffing Area when clicking "Express Interest" cards
     document.querySelectorAll('[data-staffing-area]').forEach((trigger) => {
@@ -636,17 +696,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!resumeInput) return '';
       const files = resumeInput.files;
       if (!files || files.length === 0) {
-        return 'Please upload your resume in PDF or DOCX format.';
+        return 'Please upload your resume in PDF, DOC, or DOCX format.';
       }
       const file = files[0];
       const lowerName = (file.name || '').toLowerCase();
       const hasValidExt = allowedExtensions.some((ext) => lowerName.endsWith(ext));
       const hasValidMime = !file.type || allowedMimeTypes.includes(file.type);
       if (!hasValidExt || !hasValidMime) {
-        return 'Unsupported file type. Please upload a PDF (.pdf) or Word (.docx) document.';
+        return 'Unsupported file type. Please upload a PDF (.pdf), DOC (.doc), or DOCX (.docx) document.';
+      }
+      if (file.size === 0) {
+        return 'The selected file is empty. Please choose a valid resume file.';
       }
       if (file.size > maxFileSizeBytes) {
-        return `File size exceeds the ${maxFileSizeMB} MB maximum limit. Please upload a smaller PDF or DOCX file.`;
+        return `File size exceeds the ${maxFileSizeMB} MB maximum limit. Please upload a smaller PDF, DOC, or DOCX file.`;
       }
       return '';
     };
@@ -755,6 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     careersForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (isSubmittingCareers) return;
 
       let firstInvalid = null;
       Object.keys(validators).forEach((fieldId) => {
@@ -789,60 +853,106 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      const actionUrl = (careersForm.getAttribute('action') || '').trim();
-      const isPlaceholder = !actionUrl || actionUrl === '#' || actionUrl.includes('YOUR_FORMSPREE') || actionUrl.includes('YOUR_UPLOAD_ENDPOINT');
-
-      if (isPlaceholder) {
-        showStatus(
-          'error',
-          'Submission unavailable: the external form and resume upload endpoint is not yet configured. Please configure an active Formspree (or secure upload backend) URL in the form action attribute. Your resume and information were not uploaded or stored.'
-        );
+      const supabaseClient = getSupabaseClient();
+      if (!supabaseClient) {
+        showStatus('error', 'Unable to connect to our submission service right now. Please refresh the page or contact us directly.');
         return;
       }
 
       const submitBtn = careersForm.querySelector('button[type="submit"]');
+      const submitLabel = submitBtn ? submitBtn.querySelector('span') : null;
+      const originalLabel = submitLabel ? submitLabel.textContent : '';
+
+      isSubmittingCareers = true;
       if (submitBtn) submitBtn.disabled = true;
+      if (submitLabel) submitLabel.textContent = 'Uploading & Submitting...';
 
       try {
-        const response = await fetch(actionUrl, {
-          method: 'POST',
-          body: new FormData(careersForm),
-          headers: { Accept: 'application/json' }
-        });
+        const file = resumeInput.files[0];
+        const mimeType = resolveResumeMimeType(file);
+        const filePath = buildPrivateResumePath(file.name);
+        const bucketName = supaCfg.resumesBucket || 'resumes';
 
-        if (response.ok) {
-          showStatus('success', 'Thank you for expressing your interest. Your enquiry and resume have been received by the configured upload service.');
-          careersForm.reset();
-          if (resumeSelectedText) {
-            resumeSelectedText.textContent = '';
-            resumeSelectedText.classList.remove('visible');
-          }
-        } else {
-          let providerMsg = 'The external upload service could not accept your submission. Please verify the file type and size or try again later.';
-          try {
-            const data = await response.json();
-            if (data && Array.isArray(data.errors) && data.errors.length > 0 && data.errors[0].message) {
-              providerMsg = `Submission error from upload service: ${data.errors[0].message}`;
-            }
-          } catch (_) {
-            // Non-JSON error response
-          }
-          showStatus('error', providerMsg);
+        // 1. Upload resume file to the private Supabase Storage bucket "resumes"
+        const { error: uploadError } = await supabaseClient.storage
+          .from(bucketName)
+          .upload(filePath, file, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: mimeType
+          });
+
+        if (uploadError) {
+          console.error('Supabase resume upload error:', uploadError);
+          throw new Error(uploadError.message || 'Resume file upload failed.');
+        }
+
+        // 2. Save applicant details & private file path to public.resume_submissions
+        const payload = {
+          full_name: document.getElementById('fullName').value.trim(),
+          email: document.getElementById('emailAddress').value.trim(),
+          phone: document.getElementById('phoneNumber').value.trim(),
+          preferred_staffing_area: document.getElementById('staffingArea').value,
+          relevant_experience: document.getElementById('relevantExperience').value.trim(),
+          message: document.getElementById('careerMessage').value.trim(),
+          resume_file_path: filePath,
+          resume_file_name: file.name,
+          resume_file_size: file.size,
+          resume_mime_type: mimeType,
+          privacy_acknowledged: Boolean(privacyCheckbox && privacyCheckbox.checked),
+          future_opportunities_opt_in: Boolean(futureContactCheckbox && futureContactCheckbox.checked),
+          source_page: 'careers.html'
+        };
+
+        const { error: insertError } = await supabaseClient
+          .from('resume_submissions')
+          .insert([payload]);
+
+        if (insertError) {
+          console.error('Supabase resume_submissions insert error:', insertError);
+          throw new Error(insertError.message || 'Could not save your application details.');
+        }
+
+        // 3. Optional Resend email notification via Supabase Edge Function (if enabled)
+        triggerOptionalEmailNotification('resume', payload);
+
+        showStatus(
+          'success',
+          'Thank you for expressing your interest! Your career enquiry and resume have been securely submitted to ManGENIUS Staffing LLC.'
+        );
+        careersForm.reset();
+        if (resumeSelectedText) {
+          resumeSelectedText.textContent = '';
+          resumeSelectedText.classList.remove('visible');
         }
       } catch (err) {
-        showStatus('error', 'A network error prevented delivery to the upload service. Please check your connection or contact us directly.');
+        const msg = (err && err.message) ? err.message : '';
+        if (msg.includes('Bucket not found') || msg.includes('schema cache') || msg.includes('does not exist')) {
+          showStatus(
+            'error',
+            'Submission service setup is incomplete (database table or private resumes bucket not initialized yet). Please run supabase/schema.sql in your Supabase SQL Editor.'
+          );
+        } else {
+          showStatus(
+            'error',
+            'We could not submit your resume enquiry right now. Please check your file and connection and try again, or contact us directly.'
+          );
+        }
       } finally {
+        isSubmittingCareers = false;
         if (submitBtn) submitBtn.disabled = false;
+        if (submitLabel && originalLabel) submitLabel.textContent = originalLabel;
       }
     });
   }
 
   /* --------------------------------------------------------------------------
-     12. CONTACT ENQUIRY FORM VALIDATION (contact.html)
+     12. CONTACT ENQUIRY FORM VALIDATION & SUPABASE SUBMISSION (contact.html)
      -------------------------------------------------------------------------- */
   const contactForm = document.getElementById('contactEnquiryForm');
   if (contactForm) {
     const statusBox = document.getElementById('contactFormStatus');
+    let isSubmittingContact = false;
 
     const contactValidators = {
       contactFullName: (val) => {
@@ -923,6 +1033,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (isSubmittingContact) return;
 
       let firstInvalid = null;
       Object.keys(contactValidators).forEach((fieldId) => {
@@ -941,37 +1052,69 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      const actionUrl = (contactForm.getAttribute('action') || '').trim();
-      const isPlaceholder = !actionUrl || actionUrl === '#' || actionUrl.includes('YOUR_FORMSPREE');
-
-      if (isPlaceholder) {
-        showContactStatus(
-          'info',
-          'Form validation passed. Because this is a static website, an external form service endpoint (such as Formspree) must be configured on the form action attribute to receive live submissions. No data has been stored or transmitted.'
-        );
+      const supabaseClient = getSupabaseClient();
+      if (!supabaseClient) {
+        showContactStatus('error', 'Unable to connect to our submission service right now. Please refresh the page or reach out directly.');
         return;
       }
 
       const submitBtn = contactForm.querySelector('button[type="submit"]');
+      const submitLabel = submitBtn ? submitBtn.querySelector('span') : null;
+      const originalLabel = submitLabel ? submitLabel.textContent : '';
+
+      isSubmittingContact = true;
       if (submitBtn) submitBtn.disabled = true;
+      if (submitLabel) submitLabel.textContent = 'Submitting...';
 
       try {
-        const response = await fetch(actionUrl, {
-          method: 'POST',
-          body: new FormData(contactForm),
-          headers: { Accept: 'application/json' }
-        });
+        const orgInput = document.getElementById('contactOrganization');
+        const orgVal = orgInput ? orgInput.value.trim() : '';
 
-        if (response.ok) {
-          showContactStatus('success', 'Thank you for reaching out. Your enquiry has been sent to ManGENIUS Staffing LLC.');
-          contactForm.reset();
-        } else {
-          showContactStatus('error', 'We could not submit your enquiry through the configured form service. Please try again later or reach out directly.');
+        const payload = {
+          full_name: document.getElementById('contactFullName').value.trim(),
+          email: document.getElementById('contactEmail').value.trim(),
+          phone: document.getElementById('contactPhone').value.trim(),
+          organization_name: orgVal || null,
+          contacting_as: document.getElementById('contactRole').value,
+          subject: document.getElementById('contactService').value,
+          message: document.getElementById('contactMessage').value.trim(),
+          source_page: 'contact.html'
+        };
+
+        const { error: insertError } = await supabaseClient
+          .from('contact_submissions')
+          .insert([payload]);
+
+        if (insertError) {
+          console.error('Supabase contact_submissions insert error:', insertError);
+          throw new Error(insertError.message || 'Could not save your contact enquiry.');
         }
+
+        // Optional Resend email notification via Supabase Edge Function (if enabled)
+        triggerOptionalEmailNotification('contact', payload);
+
+        showContactStatus(
+          'success',
+          'Thank you for reaching out! Your enquiry has been received by ManGENIUS Staffing LLC.'
+        );
+        contactForm.reset();
       } catch (err) {
-        showContactStatus('error', 'A network error prevented delivery. Please check your connection or reach out directly.');
+        const msg = (err && err.message) ? err.message : '';
+        if (msg.includes('schema cache') || msg.includes('does not exist')) {
+          showContactStatus(
+            'error',
+            'Submission service setup is incomplete (contact_submissions table not initialized yet). Please run supabase/schema.sql in your Supabase SQL Editor.'
+          );
+        } else {
+          showContactStatus(
+            'error',
+            'We could not submit your enquiry right now. Please check your connection and try again, or reach out directly.'
+          );
+        }
       } finally {
+        isSubmittingContact = false;
         if (submitBtn) submitBtn.disabled = false;
+        if (submitLabel && originalLabel) submitLabel.textContent = originalLabel;
       }
     });
   }
