@@ -638,18 +638,69 @@ document.addEventListener('DOMContentLoaded', () => {
     return `applications/${ym}/${generateSafeUploadId()}-${safeName}`;
   };
 
-  const triggerOptionalEmailNotification = async (type, data) => {
+  const sendNotificationEmail = async (type, data) => {
     const cfg = getSupabaseConfig();
     const client = getSupabaseClient();
-    if (!cfg.enableEmailNotifications || !client || !cfg.emailEdgeFunction) return;
+    if (!cfg.enableEmailNotifications || !client || !cfg.emailEdgeFunction) {
+      return { sent: false, skipped: true, status: 0, error: 'Email notifications are disabled in supabase-config.js.' };
+    }
     try {
-      await client.functions.invoke(cfg.emailEdgeFunction, {
+      const { data: fnData, error: fnError } = await client.functions.invoke(cfg.emailEdgeFunction, {
         body: { type, data }
       });
+
+      if (fnError) {
+        let status = 0;
+        let detail = fnError.message || 'Email notification request failed.';
+        if (fnError.context && typeof fnError.context === 'object') {
+          status = fnError.context.status || 0;
+          try {
+            const errBody = await fnError.context.json();
+            if (errBody && (errBody.error || errBody.message)) {
+              detail = errBody.error || errBody.message;
+            }
+          } catch (_) {
+            // Response body was not JSON
+          }
+        }
+        console.error('Supabase email Edge Function error:', { status, detail, fnError });
+        return { sent: false, status, error: detail };
+      }
+
+      if (fnData && fnData.sent === true && typeof fnData.id === 'string' && fnData.id.trim().length > 0) {
+        return {
+          sent: true,
+          id: fnData.id.trim(),
+          deliveryStatus: fnData.deliveryStatus || 'accepted_by_resend',
+          status: 200
+        };
+      }
+
+      const fallbackErr = (fnData && fnData.error) || 'Resend did not return a valid email delivery confirmation ID.';
+      console.error('Supabase email Edge Function non-success response:', fnData);
+      return { sent: false, status: 502, error: fallbackErr };
     } catch (err) {
-      // Non-blocking: submission is already safely stored in Supabase
-      console.warn('Optional notification Edge Function skipped or failed:', err);
+      const msg = (err && err.message) ? err.message : 'Unable to reach the email notification service.';
+      console.error('Supabase email Edge Function exception:', err);
+      return { sent: false, status: 0, error: msg };
     }
+  };
+
+  const formatEmailFailureNotice = (emailResult, recordLabel, verb = 'was') => {
+    const status = emailResult && emailResult.status;
+    if (status === 404) {
+      return `Your ${recordLabel} ${verb} saved, but the email notification failed because the "send-notification-email" Supabase Edge Function is not deployed yet.`;
+    }
+    if (status === 401) {
+      return `Your ${recordLabel} ${verb} saved, but the email notification was rejected (401). Please disable "Verify JWT with legacy secret" on the "send-notification-email" Edge Function.`;
+    }
+    if (status === 503) {
+      return `Your ${recordLabel} ${verb} saved, but email notification is not configured yet (${emailResult.error || 'missing RESEND_API_KEY or NOTIFICATION_TO_EMAIL secret'}).`;
+    }
+    if (status === 0 && emailResult && /Failed to send a request/i.test(emailResult.error || '')) {
+      return `Your ${recordLabel} ${verb} saved, but the email notification could not reach the "send-notification-email" Edge Function. Please confirm the function is deployed in Supabase.`;
+    }
+    return `Your ${recordLabel} ${verb} saved, but the email notification could not be sent right now (${emailResult.error || 'please check Supabase Edge Function logs'}).`;
   };
 
   /* --------------------------------------------------------------------------
@@ -865,7 +916,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       isSubmittingCareers = true;
       if (submitBtn) submitBtn.disabled = true;
-      if (submitLabel) submitLabel.textContent = 'Uploading & Submitting...';
+      if (submitLabel) submitLabel.textContent = 'Uploading & Sending...';
+      showStatus('info', 'Uploading your resume and sending your career enquiry. Please wait...');
 
       try {
         const file = resumeInput.files[0];
@@ -913,17 +965,23 @@ document.addEventListener('DOMContentLoaded', () => {
           throw new Error(insertError.message || 'Could not save your application details.');
         }
 
-        // 3. Optional Resend email notification via Supabase Edge Function (if enabled)
-        triggerOptionalEmailNotification('resume', payload);
+        // 3. Send Resend email notification via Supabase Edge Function
+        if (submitLabel) submitLabel.textContent = 'Sending Notification...';
+        const emailResult = await sendNotificationEmail('resume', payload);
 
-        showStatus(
-          'success',
-          'Thank you for expressing your interest! Your career enquiry and resume have been securely submitted to ManGENIUS Staffing LLC.'
-        );
         careersForm.reset();
         if (resumeSelectedText) {
           resumeSelectedText.textContent = '';
           resumeSelectedText.classList.remove('visible');
+        }
+
+        if (emailResult.sent || emailResult.skipped) {
+          showStatus(
+            'success',
+            'Thank you for expressing your interest! Your career enquiry and resume have been securely submitted and our team has been notified.'
+          );
+        } else {
+          showStatus('error', formatEmailFailureNotice(emailResult, 'career enquiry and resume', 'were'));
         }
       } catch (err) {
         const msg = (err && err.message) ? err.message : '';
@@ -1064,7 +1122,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       isSubmittingContact = true;
       if (submitBtn) submitBtn.disabled = true;
-      if (submitLabel) submitLabel.textContent = 'Submitting...';
+      if (submitLabel) submitLabel.textContent = 'Sending Enquiry...';
+      showContactStatus('info', 'Submitting your enquiry and sending notification. Please wait...');
 
       try {
         const orgInput = document.getElementById('contactOrganization');
@@ -1090,14 +1149,20 @@ document.addEventListener('DOMContentLoaded', () => {
           throw new Error(insertError.message || 'Could not save your contact enquiry.');
         }
 
-        // Optional Resend email notification via Supabase Edge Function (if enabled)
-        triggerOptionalEmailNotification('contact', payload);
+        // Send Resend email notification via Supabase Edge Function
+        if (submitLabel) submitLabel.textContent = 'Sending Notification...';
+        const emailResult = await sendNotificationEmail('contact', payload);
 
-        showContactStatus(
-          'success',
-          'Thank you for reaching out! Your enquiry has been received by ManGENIUS Staffing LLC.'
-        );
         contactForm.reset();
+
+        if (emailResult.sent || emailResult.skipped) {
+          showContactStatus(
+            'success',
+            'Thank you for reaching out! Your enquiry has been received and our team has been notified.'
+          );
+        } else {
+          showContactStatus('error', formatEmailFailureNotice(emailResult, 'contact enquiry'));
+        }
       } catch (err) {
         const msg = (err && err.message) ? err.message : '';
         if (msg.includes('schema cache') || msg.includes('does not exist')) {

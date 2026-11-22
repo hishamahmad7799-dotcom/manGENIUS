@@ -24,10 +24,10 @@
     // Maximum allowed resume size in MB (must match bucket file_size_limit in Supabase)
     maxResumeSizeMB: 10,
 
-    // Optional Supabase Edge Function name prepared for Resend email notifications
-    // Set enableEmailNotifications to true after deploying the Edge Function and setting RESEND_API_KEY
+    // Supabase Edge Function name for Resend email notifications
+    // RESEND_API_KEY and NOTIFICATION_TO_EMAIL live ONLY in Supabase Edge Function Secrets.
     emailEdgeFunction: 'send-notification-email',
-    enableEmailNotifications: false
+    enableEmailNotifications: true
   };
 
   window.MANGENIUS_SUPABASE_CONFIG = SUPABASE_CONFIG;

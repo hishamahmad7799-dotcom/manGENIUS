@@ -1,0 +1,8 @@
+# Supabase project configuration for Edge Functions deployment
+project_id = "mrtappsdecgbqpejowmz"
+
+# Public website forms call this Edge Function using the Supabase Publishable Key
+# (sb_publishable_...), so legacy JWT verification must be disabled at the gateway.
+# Security is enforced inside the function (strict input validation + fixed server-side recipient).
+[functions.send-notification-email]
+verify_jwt = false
