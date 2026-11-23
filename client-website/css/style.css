@@ -1850,29 +1850,18 @@ p:last-child {
 .trust-item {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: 0.45rem 0.35rem;
-  border-radius: var(--radius-md);
-  transition: transform var(--transition-fast), background-color var(--transition-fast);
+  padding: 0.2rem 0 0.2rem 1.35rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.14);
+  transition: transform var(--transition-fast);
+}
+
+.trust-item:first-child {
+  border-left: none;
+  padding-left: 0;
 }
 
 .trust-item:hover {
   transform: translateY(-2px);
-  background-color: rgba(255, 255, 255, 0.03);
-}
-
-.trust-item-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  background: linear-gradient(135deg, rgba(255, 107, 26, 0.22) 0%, rgba(255, 107, 26, 0.06) 100%);
-  border: 1px solid rgba(255, 107, 26, 0.35);
-  color: var(--color-orange);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 4px 14px rgba(255, 107, 26, 0.15);
 }
 
 .trust-item-text {
@@ -1882,11 +1871,11 @@ p:last-child {
 
 .trust-item-stat {
   font-family: var(--font-heading);
-  font-size: clamp(1.5rem, 2.3vw, 2rem);
-  font-weight: var(--fw-extrabold);
+  font-size: clamp(1.6rem, 2.4vw, 2.15rem);
+  font-weight: var(--fw-semibold);
   color: var(--color-white);
   line-height: 1.1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 .trust-item-stat .counter {
@@ -1901,11 +1890,11 @@ p:last-child {
 
 .trust-item-label {
   font-size: var(--fs-xs);
-  font-weight: var(--fw-semibold);
-  color: #B0B0B0;
+  font-weight: var(--fw-medium);
+  color: rgba(255, 255, 255, 0.9);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-top: 3px;
+  margin-top: 5px;
 }
 
 /* About Section Enhancements */
@@ -4052,26 +4041,17 @@ textarea.form-control {
     padding-top: 1.5rem;
   }
 
-  .trust-item {
+  .trust-item,
+  .trust-item:first-child {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.6rem;
-    padding: 0.9rem 0.85rem;
+    gap: 0.2rem;
+    padding: 0.9rem 0.95rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-  }
-
-  .trust-item-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .trust-item-icon svg {
-    width: 17px;
-    height: 17px;
   }
 
   .trust-item-stat {
@@ -4082,7 +4062,7 @@ textarea.form-control {
   .trust-item-label {
     font-size: 11px;
     line-height: 1.3;
-    color: #CBD5E1;
+    color: rgba(255, 255, 255, 0.9);
   }
 
   /* About Section Mobile Polish */
