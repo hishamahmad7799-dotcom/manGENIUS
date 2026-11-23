@@ -10,10 +10,10 @@
   <!-- Preconnect to Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
   
   <!-- Master Stylesheet -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
   
   <!-- Favicon / Touch Icon -->
   <link rel="icon" type="image/png" href="images/logo.png">
@@ -163,134 +163,140 @@
       </div>
     </section>
 
-    <!-- 3A. SERVICE 1: INFORMATION TECHNOLOGY STAFFING -->
-    <section class="section bg-light" id="it-staffing">
+    <!-- 3. CORE STAFFING SERVICES (Alternating Vertical Timeline) -->
+    <section class="section bg-light services-timeline-section" id="services-list">
       <div class="container">
-        <div class="service-detail-split">
-          <div class="service-detail-media reveal">
-            <img src="images/industries/it.jpg" alt="Information Technology professionals collaborating at modern workstations" width="900" height="540" loading="lazy">
-            <span class="service-detail-tag">01 &bull; Information Technology</span>
-          </div>
+        <div class="services-timeline">
 
-          <div class="service-detail-content reveal reveal-delay-1">
-            <span class="eyebrow">Information Technology Staffing</span>
-            <h2>Strengthening Technology Teams for Modern Operations</h2>
-            <p class="text-lead" style="color: #1E293B; margin-bottom: var(--space-3);">
-              We help organizations connect with technology professionals who support their IT requirements, digital operations, and business objectives.
-            </p>
-            <p>
-              As technology plays an increasingly central role in organizational performance, finding adaptable and capable IT talent is essential. We work closely with hiring teams to understand technical environments, collaboration styles, and project goals before connecting you with suitable professionals.
-            </p>
-
-            <div class="service-points-list">
-              <div class="service-point-item">
-                <span class="service-point-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span>Talent sourcing aligned with your technical requirements, operational workflows, and team culture.</span>
-              </div>
-              <div class="service-point-item">
-                <span class="service-point-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span>Support for day-to-day IT operations, systems reliability, and evolving digital initiatives.</span>
-              </div>
-              <div class="service-point-item">
-                <span class="service-point-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span>Relationship-driven communication throughout every stage of the recruitment process.</span>
-              </div>
+          <!-- Service 1: Information Technology Staffing (Left) -->
+          <div class="timeline-row timeline-left" id="it-staffing">
+            <div class="timeline-col">
+              <article class="timeline-card reveal">
+                <div class="timeline-card-media">
+                  <img src="images/industries/it.jpg" alt="Information Technology professionals collaborating at modern workstations" width="900" height="540" loading="lazy">
+                </div>
+                <div class="timeline-card-body">
+                  <span class="eyebrow">Information Technology Staffing</span>
+                  <h2>Strengthening Technology Teams for Modern Operations</h2>
+                  <p>
+                    We help organizations connect with technology professionals who support their IT requirements, digital operations, and business objectives—aligned with your technical environment and project goals.
+                  </p>
+                  <div class="service-points-list">
+                    <div class="service-point-item">
+                      <span class="service-point-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </span>
+                      <span>Talent sourcing aligned with your technical requirements, operational workflows, and team culture.</span>
+                    </div>
+                    <div class="service-point-item">
+                      <span class="service-point-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </span>
+                      <span>Support for day-to-day IT operations, systems reliability, and evolving digital initiatives.</span>
+                    </div>
+                    <div class="service-point-item">
+                      <span class="service-point-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </span>
+                      <span>Relationship-driven communication throughout every stage of the recruitment process.</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="timeline-decor" aria-hidden="true">
+              <span class="timeline-bubble bubble-ring-lg"></span>
+              <span class="timeline-bubble bubble-orb-md"></span>
+              <span class="timeline-bubble bubble-orb-sm"></span>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- 3B. SERVICE 2: SPECIAL EDUCATION STAFFING -->
-    <section class="section bg-white" id="special-education-staffing">
-      <div class="container">
-        <div class="service-detail-split is-reversed">
-          <div class="service-detail-media reveal">
-            <img src="images/industries/special-education.jpg" alt="Special Education professional guiding students in an inclusive classroom" width="900" height="540" loading="lazy">
-            <span class="service-detail-tag">02 &bull; Special Education</span>
-          </div>
-
-          <div class="service-detail-content reveal reveal-delay-1">
-            <span class="eyebrow">Special Education Staffing</span>
-            <h2>Supporting Inclusive Learning and Student Growth</h2>
-            <p class="text-lead" style="color: #1E293B; margin-bottom: var(--space-3);">
-              We support educational institutions in connecting with dedicated professionals who contribute to inclusive learning environments and student development.
-            </p>
-            <p>
-              Educational communities thrive when students have consistent access to compassionate, capable professionals. Our Special Education staffing practice focuses on understanding school environments and connecting institutions with individuals committed to making a positive difference for learners.
-            </p>
-
-            <div class="service-points-list">
-              <div class="service-point-item">
-                <span class="service-point-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span>Thoughtful alignment with school needs, classroom settings, and student-centered priorities.</span>
-              </div>
-              <div class="service-point-item">
-                <span class="service-point-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span>Dedicated outreach to professionals passionate about inclusive education and student progress.</span>
-              </div>
-              <div class="service-point-item">
-                <span class="service-point-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span>Collaborative staffing support aimed at helping educational teams maintain continuity and care.</span>
-              </div>
+          <!-- Service 2: Special Education Staffing (Right) -->
+          <div class="timeline-row timeline-right" id="special-education-staffing">
+            <div class="timeline-decor" aria-hidden="true">
+              <span class="timeline-bubble bubble-ring-lg"></span>
+              <span class="timeline-bubble bubble-orb-md"></span>
+              <span class="timeline-bubble bubble-orb-sm"></span>
+            </div>
+            <div class="timeline-col">
+              <article class="timeline-card reveal">
+                <div class="timeline-card-media">
+                  <img src="images/industries/special-education.jpg" alt="Special Education professional guiding students in an inclusive classroom" width="900" height="540" loading="lazy">
+                </div>
+                <div class="timeline-card-body">
+                  <span class="eyebrow">Special Education Staffing</span>
+                  <h2>Supporting Inclusive Learning and Student Growth</h2>
+                  <p>
+                    We support educational institutions in connecting with dedicated, compassionate professionals who contribute to inclusive learning environments and meaningful student development.
+                  </p>
+                  <div class="service-points-list">
+                    <div class="service-point-item">
+                      <span class="service-point-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </span>
+                      <span>Thoughtful alignment with school needs, classroom settings, and student-centered priorities.</span>
+                    </div>
+                    <div class="service-point-item">
+                      <span class="service-point-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </span>
+                      <span>Dedicated outreach to professionals passionate about inclusive education and student progress.</span>
+                    </div>
+                    <div class="service-point-item">
+                      <span class="service-point-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </span>
+                      <span>Collaborative staffing support aimed at helping educational teams maintain continuity and care.</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- 3C. SERVICE 3: HEALTHCARE STAFFING -->
-    <section class="section bg-light" id="healthcare-staffing">
-      <div class="container">
-        <div class="service-detail-split">
-          <div class="service-detail-media reveal">
-            <img src="images/industries/healthcare.jpg" alt="Healthcare professional in a bright modern clinical hallway" width="900" height="540" loading="lazy">
-            <span class="service-detail-tag">03 &bull; Healthcare</span>
-          </div>
-
-          <div class="service-detail-content reveal reveal-delay-1">
-            <span class="eyebrow">Healthcare Staffing</span>
-            <h2>Dependable Talent for Essential Healthcare Teams</h2>
-            <p class="text-lead" style="color: #1E293B; margin-bottom: var(--space-3);">
-              We help healthcare organizations connect with qualified professionals to support staffing needs and contribute to dependable healthcare services.
-            </p>
-            <p>
-              Healthcare organizations rely on dedicated teams to sustain consistent, attentive operations. We take the time to understand your staffing priorities and work proactively to connect your organization with professionals ready to contribute effectively within healthcare environments.
-            </p>
-
-            <div class="service-points-list">
-              <div class="service-point-item">
-                <span class="service-point-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span>Attentive recruitment focused on organizational fit, professionalism, and dependability.</span>
-              </div>
-              <div class="service-point-item">
-                <span class="service-point-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span>Support for evolving staffing requirements across care teams and healthcare departments.</span>
-              </div>
-              <div class="service-point-item">
-                <span class="service-point-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                </span>
-                <span>Clear, responsive coordination designed to simplify workforce planning for leadership teams.</span>
-              </div>
+          <!-- Service 3: Healthcare Staffing (Left) -->
+          <div class="timeline-row timeline-left" id="healthcare-staffing">
+            <div class="timeline-col">
+              <article class="timeline-card reveal">
+                <div class="timeline-card-media">
+                  <img src="images/industries/healthcare.jpg" alt="Healthcare professional in a bright modern clinical hallway" width="900" height="540" loading="lazy">
+                </div>
+                <div class="timeline-card-body">
+                  <span class="eyebrow">Healthcare Staffing</span>
+                  <h2>Dependable Talent for Essential Healthcare Teams</h2>
+                  <p>
+                    We help healthcare organizations connect with qualified professionals to support staffing needs and contribute to consistent, attentive, dependable healthcare services.
+                  </p>
+                  <div class="service-points-list">
+                    <div class="service-point-item">
+                      <span class="service-point-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </span>
+                      <span>Attentive recruitment focused on organizational fit, professionalism, and dependability.</span>
+                    </div>
+                    <div class="service-point-item">
+                      <span class="service-point-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </span>
+                      <span>Support for evolving staffing requirements across care teams and healthcare departments.</span>
+                    </div>
+                    <div class="service-point-item">
+                      <span class="service-point-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      </span>
+                      <span>Clear, responsive coordination designed to simplify workforce planning for leadership teams.</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="timeline-decor" aria-hidden="true">
+              <span class="timeline-bubble bubble-ring-lg"></span>
+              <span class="timeline-bubble bubble-orb-md"></span>
+              <span class="timeline-bubble bubble-orb-sm"></span>
             </div>
           </div>
+
         </div>
       </div>
     </section>

@@ -315,8 +315,10 @@ function buildResumeEmailContent(
   const phone = cleanText(rawData.phone, 40);
   const message = cleanText(rawData.message, 5000);
   const sourcePage = cleanText(rawData.source_page, 100) || 'careers.html';
-  const preferredArea = cleanText(rawData.preferred_staffing_area, 120) || 'Not specified';
-  const relevantExperience = cleanText(rawData.relevant_experience, 500) || 'Not specified';
+  const preferredArea = cleanText(rawData.preferred_staffing_area, 120);
+  const relevantExperience = cleanText(rawData.relevant_experience, 500);
+  const zipCode = cleanText(rawData.zip_code, 20);
+  const location = cleanText(rawData.location, 200);
   const resumeFileName = cleanText(rawData.resume_file_name, 255) || 'candidate_resume.pdf';
   const resumeFilePath = cleanText(rawData.resume_file_path, 400);
   const resumeSize = formatFileSize(rawData.resume_file_size);
@@ -366,9 +368,25 @@ function buildResumeEmailContent(
   const headingTitle = isRegenerated
     ? 'Regenerated Resume Download Link'
     : 'New Career &amp; Resume Submission';
+  const subjectContext = location || preferredArea || 'Careers';
   const subject = isRegenerated
-    ? `Fresh Resume Download Link (${preferredArea}) — ${fullName}`
-    : `New Resume Submission (${preferredArea}) — ${fullName}`;
+    ? `Fresh Resume Download Link (${subjectContext}) — ${fullName}`
+    : `New Resume Submission (${subjectContext}) — ${fullName}`;
+
+  const locationRowsHtml = [
+    location
+      ? `<tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Location:</td><td style="padding:8px 0;">${escapeHtml(location)}</td></tr>`
+      : '',
+    zipCode
+      ? `<tr><td style="padding:8px 0;font-weight:bold;color:#374151;">ZIP Code:</td><td style="padding:8px 0;">${escapeHtml(zipCode)}</td></tr>`
+      : '',
+    !location && !zipCode && preferredArea
+      ? `<tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Preferred Staffing Area:</td><td style="padding:8px 0;">${escapeHtml(preferredArea)}</td></tr>`
+      : '',
+    !location && !zipCode && relevantExperience
+      ? `<tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Relevant Experience:</td><td style="padding:8px 0;">${escapeHtml(relevantExperience)}</td></tr>`
+      : '',
+  ].filter(Boolean).join('\n          ');
 
   const html = `
     <div style="font-family:Arial,Helvetica,sans-serif;max-width:640px;margin:0 auto;color:#111827;line-height:1.6;">
@@ -382,8 +400,7 @@ function buildResumeEmailContent(
           <tr><td style="padding:8px 0;font-weight:bold;width:210px;color:#374151;">Full Name:</td><td style="padding:8px 0;">${escapeHtml(fullName)}</td></tr>
           <tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Email Address:</td><td style="padding:8px 0;"><a href="mailto:${escapeHtml(email)}" style="color:#FF6600;">${escapeHtml(email)}</a></td></tr>
           <tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Phone Number:</td><td style="padding:8px 0;">${escapeHtml(phone)}</td></tr>
-          <tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Preferred Staffing Area:</td><td style="padding:8px 0;">${escapeHtml(preferredArea)}</td></tr>
-          <tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Relevant Experience:</td><td style="padding:8px 0;">${escapeHtml(relevantExperience)}</td></tr>
+          ${locationRowsHtml}
           <tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Resume File:</td><td style="padding:8px 0;">${escapeHtml(resumeFileName)} (${escapeHtml(resumeSize)})</td></tr>
           <tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Private Storage Path:</td><td style="padding:8px 0;"><code>resumes/${escapeHtml(resumeFilePath || 'Not provided')}</code></td></tr>
           <tr><td style="padding:8px 0;font-weight:bold;color:#374151;">Privacy Acknowledged:</td><td style="padding:8px 0;">${privacyAck}</td></tr>
@@ -413,8 +430,10 @@ function buildResumeEmailContent(
     `Full Name: ${fullName}`,
     `Email: ${email}`,
     `Phone: ${phone}`,
-    `Preferred Staffing Area: ${preferredArea}`,
-    `Relevant Experience: ${relevantExperience}`,
+    ...(location ? [`Location: ${location}`] : []),
+    ...(zipCode ? [`ZIP Code: ${zipCode}`] : []),
+    ...(!location && !zipCode && preferredArea ? [`Preferred Staffing Area: ${preferredArea}`] : []),
+    ...(!location && !zipCode && relevantExperience ? [`Relevant Experience: ${relevantExperience}`] : []),
     `Resume File: ${resumeFileName} (${resumeSize})`,
     `Private Storage Path: resumes/${resumeFilePath || 'Not provided'}`,
     `Privacy Acknowledged: ${privacyAck}`,

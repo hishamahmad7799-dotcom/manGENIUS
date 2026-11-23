@@ -708,7 +708,7 @@ document.addEventListener('DOMContentLoaded', () => {
      -------------------------------------------------------------------------- */
   const careersForm = document.getElementById('careersEnquiryForm');
   if (careersForm) {
-    const areaSelect = document.getElementById('staffingArea');
+    let selectedCareerArea = 'Information Technology';
     const statusBox = document.getElementById('careersFormStatus');
     const resumeInput = document.getElementById('resumeUpload');
     const resumeWrapper = document.getElementById('resumeUploadWrapper');
@@ -727,18 +727,12 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     let isSubmittingCareers = false;
 
-    // Pre-select Preferred Staffing Area when clicking "Express Interest" cards
+    // Remember selected career card area if visitor clicks "Express Interest"
     document.querySelectorAll('[data-staffing-area]').forEach((trigger) => {
       trigger.addEventListener('click', () => {
         const area = trigger.getAttribute('data-staffing-area');
-        if (areaSelect && area) {
-          areaSelect.value = area;
-          areaSelect.classList.remove('is-invalid');
-          const errEl = document.getElementById('staffingAreaError');
-          if (errEl) {
-            errEl.textContent = '';
-            errEl.classList.remove('visible');
-          }
+        if (area) {
+          selectedCareerArea = area;
         }
       });
     });
@@ -783,14 +777,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (digits.length < 7 || digits.length > 15) return 'Please enter a valid phone number (7 to 15 digits).';
         return '';
       },
-      staffingArea: (val) => {
-        const allowed = ['Information Technology', 'Special Education', 'Healthcare'];
-        if (!allowed.includes(val)) return 'Please select a preferred staffing area.';
+      zipCode: (val) => {
+        const cleaned = val.trim();
+        if (!cleaned) return 'Please enter your ZIP code.';
+        if (!/^[A-Za-z0-9][A-Za-z0-9\s-]{2,11}$/.test(cleaned)) return 'Please enter a valid ZIP or postal code.';
         return '';
       },
-      relevantExperience: (val) => {
-        if (!val.trim()) return 'Please briefly describe your relevant experience.';
-        if (val.trim().length < 3) return 'Please provide a brief summary of your relevant experience.';
+      candidateLocation: (val) => {
+        const cleaned = val.trim();
+        if (!cleaned) return 'Please enter your location (City, State).';
+        if (cleaned.length < 2) return 'Please enter at least 2 characters for your location.';
         return '';
       },
       careerMessage: (val) => {
@@ -940,12 +936,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 2. Save applicant details & private file path to public.resume_submissions
-        const payload = {
+        const zipCodeVal = document.getElementById('zipCode').value.trim();
+        const locationVal = document.getElementById('candidateLocation').value.trim();
+        const locationSummary = `Location: ${locationVal} | ZIP Code: ${zipCodeVal}`;
+
+        const basePayload = {
           full_name: document.getElementById('fullName').value.trim(),
           email: document.getElementById('emailAddress').value.trim(),
           phone: document.getElementById('phoneNumber').value.trim(),
-          preferred_staffing_area: document.getElementById('staffingArea').value,
-          relevant_experience: document.getElementById('relevantExperience').value.trim(),
           message: document.getElementById('careerMessage').value.trim(),
           resume_file_path: filePath,
           resume_file_name: file.name,
@@ -956,9 +954,28 @@ document.addEventListener('DOMContentLoaded', () => {
           source_page: 'careers.html'
         };
 
-        const { error: insertError } = await supabaseClient
+        const modernPayload = {
+          ...basePayload,
+          zip_code: zipCodeVal,
+          location: locationVal
+        };
+
+        let { error: insertError } = await supabaseClient
           .from('resume_submissions')
-          .insert([payload]);
+          .insert([modernPayload]);
+
+        // Backwards-compatible fallback if live Supabase table still uses legacy columns
+        if (insertError && /column|schema cache|null value|not-null|zip_code|location/i.test(insertError.message || '')) {
+          const legacyPayload = {
+            ...basePayload,
+            preferred_staffing_area: selectedCareerArea || 'Information Technology',
+            relevant_experience: locationSummary
+          };
+          const retry = await supabaseClient
+            .from('resume_submissions')
+            .insert([legacyPayload]);
+          insertError = retry.error;
+        }
 
         if (insertError) {
           console.error('Supabase resume_submissions insert error:', insertError);
@@ -967,7 +984,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 3. Send Resend email notification via Supabase Edge Function
         if (submitLabel) submitLabel.textContent = 'Sending Notification...';
-        const emailResult = await sendNotificationEmail('resume', payload);
+        const emailPayload = {
+          ...modernPayload,
+          preferred_staffing_area: selectedCareerArea || 'Career Enquiry',
+          relevant_experience: locationSummary
+        };
+        const emailResult = await sendNotificationEmail('resume', emailPayload);
 
         careersForm.reset();
         if (resumeSelectedText) {
