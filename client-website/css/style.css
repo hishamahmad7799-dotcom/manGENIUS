@@ -1382,15 +1382,35 @@ p:last-child {
   gap: var(--space-12);
 }
 
-/* Fixed Background Image CTA (Homepage "Take The Next Step") */
+/* Fixed Background Image CTA (Homepage "Take The Next Step") — Mobile & Desktop Safe */
 .cta-fixed-bg {
+  position: relative;
+  isolation: isolate;
+  background-color: #0a0e16;
+  clip-path: inset(0);
+  -webkit-clip-path: inset(0);
+}
+
+.cta-fixed-bg::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  z-index: -1;
+  pointer-events: none;
   background-image:
     linear-gradient(135deg, rgba(10, 14, 22, 0.84) 0%, rgba(12, 16, 24, 0.74) 55%, rgba(10, 14, 22, 0.86) 100%),
     url('../images/workplace.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 /* Brand Column */
@@ -2590,25 +2610,50 @@ p:last-child {
   margin-bottom: 0;
 }
 
-/* Fixed Background Image Enhancement for About Us "Our Vision" Section (No Box) */
+/* Fixed Background Image Enhancement for About Us "Our Vision" Section (No Box) — Mobile & Desktop Safe */
 .section.vision-fixed-bg {
   position: relative;
+  isolation: isolate;
   padding: clamp(2.5rem, 4.2vw, 3.5rem) 0;
+  background-color: #080c14;
+  clip-path: inset(0);
+  -webkit-clip-path: inset(0);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.section.vision-fixed-bg::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100lvh;
+  z-index: -1;
+  pointer-events: none;
   background-image:
     linear-gradient(180deg, rgba(8, 12, 20, 0.68) 0%, rgba(10, 14, 24, 0.58) 50%, rgba(8, 12, 20, 0.72) 100%),
     url('../images/about.jpg');
   background-size: cover;
-  background-position: center 65%;
+  background-position: 56% 68%;
   background-repeat: no-repeat;
-  background-attachment: fixed;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.vision-fixed-bg .container {
+  position: relative;
+  z-index: 1;
 }
 
 .vision-fixed-bg::before {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 0;
   background: radial-gradient(circle at 50% 35%, rgba(255, 102, 0, 0.14) 0%, transparent 62%);
   pointer-events: none;
 }
