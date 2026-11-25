@@ -5,18 +5,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>ManGENIUS Staffing LLC | IT, Special Education &amp; Healthcare Staffing</title>
-  <meta name="description" content="ManGENIUS Staffing LLC connects organizations with qualified professionals across Information Technology, Special Education, and Healthcare staffing.">
-  
+  <meta name="description" content="ManGENIUS Staffing LLC connects organizations with qualified professionals across Information Technology, Special Education, and Healthcare staffing nationwide.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mangenius.org/">
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ManGENIUS Staffing LLC">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="ManGENIUS Staffing LLC | IT, Special Education &amp; Healthcare Staffing">
+  <meta property="og:description" content="ManGENIUS Staffing LLC connects organizations with qualified professionals across Information Technology, Special Education, and Healthcare staffing nationwide.">
+  <meta property="og:url" content="https://mangenius.org/">
+  <meta property="og:image" content="https://mangenius.org/images/optimized/brand/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="ManGENIUS Staffing LLC — IT, Special Education &amp; Healthcare Staffing">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ManGENIUS Staffing LLC | IT, Special Education &amp; Healthcare Staffing">
+  <meta name="twitter:description" content="ManGENIUS Staffing LLC connects organizations with qualified professionals across Information Technology, Special Education, and Healthcare staffing nationwide.">
+  <meta name="twitter:image" content="https://mangenius.org/images/optimized/brand/og-image.jpg">
+  <meta name="twitter:image:alt" content="ManGENIUS Staffing LLC — IT, Special Education &amp; Healthcare Staffing">
+
   <!-- Preconnect to Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
-  
+
   <!-- Master Stylesheet -->
-  <link rel="stylesheet" href="css/style.css?v=6">
-  
-  <!-- Favicon / Touch Icon -->
-  <link rel="icon" type="image/png" href="images/logo.png">
+  <link rel="stylesheet" href="css/style.css?v=8">
+
+  <!-- Favicons & Web App Manifest -->
+  <link rel="icon" href="/assets/favicons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicons/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#000000">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "ManGENIUS Staffing LLC",
+    "url": "https://mangenius.org/",
+    "logo": "https://mangenius.org/images/logo.png",
+    "description": "ManGENIUS Staffing LLC connects organizations with qualified professionals across Information Technology, Special Education, and Healthcare staffing.",
+    "email": "info@mangeniusstaffing.com",
+    "areaServed": "US"
+  }
+  </script>
 </head>
 <body>
 
@@ -27,7 +67,10 @@
     <div class="container header-container">
       <!-- Brand Logo -->
       <a href="index.html" class="brand-logo" aria-label="ManGENIUS Staffing LLC Home">
-        <img src="images/logo.png" alt="ManGENIUS Staffing LLC Logo" width="212" height="102">
+        <picture>
+          <source srcset="images/optimized/brand/logo.webp" type="image/webp">
+          <img src="images/logo.png" alt="ManGENIUS Staffing LLC Logo" width="212" height="102" decoding="async">
+        </picture>
       </a>
 
       <!-- Primary Desktop Navigation -->
@@ -102,7 +145,10 @@
   <aside class="mobile-drawer" id="mobileDrawer" aria-label="Mobile Navigation">
     <div class="mobile-drawer-header">
       <a href="index.html" class="brand-logo">
-        <img src="images/logo.png" alt="ManGENIUS Staffing LLC" width="160" height="77">
+        <picture>
+          <source srcset="images/optimized/brand/logo.webp" type="image/webp">
+          <img src="images/logo.png" alt="ManGENIUS Staffing LLC" width="160" height="77" loading="lazy" decoding="async">
+        </picture>
       </a>
       <button class="mobile-drawer-close" aria-label="Close navigation menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -155,7 +201,11 @@
     <section class="page-hero home-hero" id="hero">
       <!-- Background Image Media Layer -->
       <div class="hero-bg-media" aria-hidden="true">
-        <img src="images/hero.jpg" alt="" class="hero-bg-img" width="1920" height="1080" fetchpriority="high">
+        <picture>
+          <source type="image/avif" srcset="images/optimized/hero/hero-768.avif 768w, images/optimized/hero/hero-1280.avif 1280w, images/optimized/hero/hero.avif 1920w" sizes="100vw">
+          <source type="image/webp" srcset="images/optimized/hero/hero-768.webp 768w, images/optimized/hero/hero-1280.webp 1280w, images/optimized/hero/hero.webp 1920w" sizes="100vw">
+          <img src="images/hero.jpg" alt="" class="hero-bg-img" width="1920" height="1080" fetchpriority="high" decoding="async">
+        </picture>
         <div class="hero-bg-overlay"></div>
         <div class="hero-bg-glow"></div>
       </div>
@@ -643,7 +693,10 @@
           <!-- Column 1: Brand Info -->
           <div class="footer-brand">
             <a href="index.html" class="footer-logo">
-              <img src="images/logo.png" alt="ManGENIUS Staffing LLC Logo" width="180" height="86">
+              <picture>
+                <source srcset="images/optimized/brand/logo.webp" type="image/webp">
+                <img src="images/logo.png" alt="ManGENIUS Staffing LLC Logo" width="180" height="86" loading="lazy" decoding="async">
+              </picture>
             </a>
             <p class="footer-about">
               ManGENIUS Staffing LLC is a premier workforce solutions provider delivering elite healthcare, educational, and corporate personnel across the United States.
